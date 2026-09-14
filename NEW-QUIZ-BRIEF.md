@@ -162,7 +162,10 @@ for that quiz, so a new quiz needs **no Apps Script work at all**: give it a
 `quizId` nobody else uses, point `CONFIG.endpoint` at the same URL the others
 use, and its tab appears when the first person finishes it.
 
-Copy the endpoint from `quiz-5/index.html`. Do not invent one.
+Copy the endpoint from `quiz-5/index.html`, or any of quizzes 3 to 7, which
+all carry the same one. Do not invent one and do not transcribe it from a
+screenshot: capital I and lowercase l are identical in that font. Use the
+Copy button in the Apps Script deploy dialog.
 
 Quiz names are not trusted with tab creation, since the `/exec` URL is public:
 only plain lowercase names of 24 characters or less become tabs, at most
