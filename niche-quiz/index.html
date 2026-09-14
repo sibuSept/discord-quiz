@@ -106,11 +106,10 @@
 <main class="card" id="screen-intro">
   <h1 id="intro-title">Niche Knowledge Check</h1>
   <p class="muted" id="intro-blurb"></p>
-  <p class="muted" id="intro-meta"></p>
   <p class="muted" id="intro-note"></p>
 
-  <label for="handle">Your Discord handle</label>
-  <input type="text" id="handle" placeholder="e.g. yourname or yourname#1234"
+  <label for="handle">Discord handle</label>
+  <input type="text" id="handle" placeholder="yourname"
          autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="40">
   <p class="err" id="handle-err" role="alert"></p>
 
@@ -179,8 +178,12 @@ const CONFIG = {
   endpoint: "",
 
   title:  "Niche Knowledge Check",
-  note:   "You get your score at the end, but not the answers. If you want full marks, go through the content and take it again.",
-  blurb:  "A quick check of what you already know about choosing a niche, before you go through the content. There's no pass mark. This is a starting point, not a test.",
+
+  /* The intro is one line: the question count and rough time are added
+     automatically, then this. Set blurb to add a second line above it,
+     or to "" to leave it out, which is what it does now. */
+  note:   "Your score at the end, but not the answers.",
+  blurb:  "",
 
   /* Save attempts to this browser so returning users see their history.
      Device-local only. The Google Sheet is the real record. */
@@ -406,14 +409,21 @@ function show(which) {
 
 /* ---------- intro ---------- */
 
+/* A blank intro line is removed rather than left as an empty gap, so the
+   intro can be trimmed from CONFIG alone. */
+function introLine(id, text) {
+  const el = $(id);
+  el.textContent = text || "";
+  el.classList.toggle("hidden", !text);
+}
+
 function initIntro() {
   document.title = CONFIG.title;
   $("intro-title").textContent = CONFIG.title;
-  $("intro-blurb").textContent = CONFIG.blurb;
-  $("intro-meta").textContent =
-    TOTAL + " multiple-choice questions, four options each. Takes about " +
-    Math.max(2, Math.round(TOTAL * 0.4)) + " minutes. You get your score straight away.";
-  $("intro-note").textContent = CONFIG.note;
+  introLine("intro-blurb", CONFIG.blurb);
+  introLine("intro-note",
+    TOTAL + " questions, about " + Math.max(2, Math.round(TOTAL * 0.4)) +
+    " minutes. " + CONFIG.note);
 
   $("handle").addEventListener("keydown", e => { if (e.key === "Enter") startQuiz(); });
   $("handle").addEventListener("input", () => { $("handle-err").textContent = ""; });
