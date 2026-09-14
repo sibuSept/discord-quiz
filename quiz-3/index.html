@@ -170,16 +170,13 @@
    ================================================================== */
 
 const CONFIG = {
-  /* This quiz gets its own Sheet and its own Apps Script deployment rather
-     than sharing the one quizzes 1 and 2 post to. Paste the /exec URL here
-     once you have it: SETUP.md, "Giving a quiz its own sheet".
+  /* This quiz's own deployment, on its own Sheet, separate from the one
+     quizzes 1 and 2 post to. Deployed 14 Sept 2026 as Version 1.
 
-     Left blank deliberately until then. Blank is the safe state: the quiz
-     runs and scores normally, saves attempts to the device, and posts
-     nothing, so it cannot land rows in the wrong spreadsheet while you are
-     still setting this up. Do not paste quiz 2's URL in here as a
-     placeholder. */
-  endpoint: "",
+     If Code.gs ever changes, this deployment has to be bumped to a new
+     version before the change takes effect here, and bumping quizzes 1
+     and 2 does nothing for this one. See SETUP.md. */
+  endpoint: "https://script.google.com/macros/s/AKfycbwFieype9akNag-2pQyBRrDmUJk-q40ek3OH30HKVAp4LaJdWM4L9fI8w-PSy-t155_/exec",
 
   /* Goes in the Quiz column. This quiz has a sheet to itself, so nothing
      here needs telling apart today, but the label costs nothing and means
