@@ -6,13 +6,14 @@ an exam. Scores are plain arithmetic, computed in the browser.
 
 No backend, no AI, no API keys, no running costs.
 
-Three quizzes live here. They share the same code, and differ only in their
+Four quizzes live here. They share the same code, and differ only in their
 `CONFIG`, `QUESTIONS` and `BANDS` blocks:
 
 ```
 index.html              quiz 1: running and monetising theme pages, 15 questions
 niche-quiz/index.html   quiz 2: choosing a niche, 15 questions
 quiz-3/index.html       quiz 3: usernames and page names, 12 questions
+quiz-4/index.html       quiz 4: growth tactics, 15 questions
 apps-script/Code.gs     Google Apps Script that writes submissions to a Sheet
 apps-script/test/       runs Code.gs against a fake spreadsheet, in plain Node
 SETUP.md                step-by-step: the Sheet endpoint, then hosting
@@ -21,7 +22,8 @@ NEW-QUIZ-BRIEF.md       context handoff for building further quizzes
 
 Quiz 3 is twelve questions rather than fifteen because the piece behind it
 carries two ideas and the rest is examples. The bands are percentage based,
-so a different question count needs no other change.
+so a different question count needs no other change, and the **Percent**
+column is the one to compare across quizzes.
 
 Each quiz is deployed as its own site, so each has its own URL, and each
 posts to its own Apps Script deployment.
@@ -37,7 +39,7 @@ does not depend on that answer. Its `CONFIG.endpoint` is blank until that
 deployment exists. See SETUP.md, "Giving a quiz its own sheet".
 
 **Each quiz writes to its own tab**, named after its `quizId`:
-`theme-pages`, `niche`, `names`. The script creates the tab, heads it and
+`theme-pages`, `niche`, `names`, `growth`. The script creates the tab, heads it and
 formats it the first time a score arrives for that quiz, so adding a quiz
 means giving it a new `quizId` and pointing it at the same web app URL.
 Nothing to edit in the script, nothing to redeploy.
@@ -65,7 +67,7 @@ node apps-script/test/test-codegs.js
 Because each is served from a different origin, their `localStorage` never
 collides. The keys are distinct regardless, so they would stay separate even
 if all three were ever served from one domain: `dq.history.v1` for quiz 1,
-then `dq.niche.*` and `dq.names.*`. Quiz 1's keys predate the per-quiz
+then `dq.niche.*`, `dq.names.*` and `dq.growth.*`. Quiz 1's keys predate the per-quiz
 namespacing and were left alone rather than renamed, since renaming them
 would orphan the attempt history of everyone who has already taken it.
 
@@ -75,9 +77,9 @@ would orphan the attempt history of everyone who has already taken it.
    section of the quiz you are changing.
 2. Follow **SETUP.md** to create the Google Sheet endpoint and paste its
    URL into `CONFIG.endpoint`.
-3. Drop the file onto Cloudflare Pages or Netlify. For quizzes 2 and 3,
-   drag the whole `niche-quiz` or `quiz-3` folder, which serves its
-   `index.html` at the root.
+3. Drop the file onto Cloudflare Pages or Netlify. For quizzes 2 onward,
+   drag the whole `niche-quiz`, `quiz-3` or `quiz-4` folder, which serves
+   its `index.html` at the root.
 4. Paste the link in Discord.
 
 Open any `index.html` directly in a browser to preview at any point. With

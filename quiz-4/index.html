@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Growth Tactics Check</title>
+<style>
+  :root{
+    --bg:#f4f5f9; --card:#ffffff; --ink:#1b1d25; --muted:#61667a;
+    --line:#e2e4ed; --line-strong:#cdd1e0;
+    --accent:#5865f2; --accent-ink:#ffffff; --accent-soft:#eceefe;
+    --bad:#c62f3d;
+    --radius:14px; --shadow:0 1px 2px rgba(20,22,40,.06), 0 8px 24px rgba(20,22,40,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#11131a; --card:#191c25; --ink:#e9eaf0; --muted:#9aa0b5;
+      --line:#272b37; --line-strong:#39405280;
+      --accent:#7c86f7; --accent-ink:#0f1117; --accent-soft:#23283f;
+      --bad:#ff7a86;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex; justify-content:center;
+    padding:24px 16px 64px;
+  }
+  .wrap{width:100%; max-width:640px}
+  .card{
+    background:var(--card); border:1px solid var(--line);
+    border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:28px 24px;
+  }
+  h1{margin:0 0 8px; font-size:24px; letter-spacing:-.01em}
+  h2{margin:0 0 6px; font-size:19px; letter-spacing:-.01em}
+  p{margin:0 0 14px}
+  .muted{color:var(--muted); font-size:14.5px}
+  .hidden{display:none !important}
+
+  /* ---------- intro ---------- */
+  label{display:block; font-weight:600; font-size:14px; margin:18px 0 6px}
+  input[type=text]{
+    width:100%; padding:12px 14px; font-size:16px; color:var(--ink);
+    background:var(--bg); border:1px solid var(--line-strong);
+    border-radius:10px; outline:none;
+  }
+  input[type=text]:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:12px 20px; font:inherit; font-weight:600; cursor:pointer;
+    background:var(--accent); color:var(--accent-ink);
+    border:1px solid transparent; border-radius:10px;
+  }
+  .btn:hover{filter:brightness(1.06)}
+  .btn:disabled{opacity:.5; cursor:not-allowed}
+  .btn.ghost{background:transparent; color:var(--muted); border-color:var(--line-strong)}
+  .btn.ghost:hover{color:var(--ink); border-color:var(--accent)}
+  .row{display:flex; gap:10px; align-items:center; margin-top:22px; flex-wrap:wrap}
+  .row .spacer{flex:1}
+
+  /* ---------- progress ---------- */
+  .meta{display:flex; justify-content:space-between; align-items:baseline; font-size:13.5px; color:var(--muted); margin-bottom:8px}
+  .bar{height:6px; background:var(--line); border-radius:99px; overflow:hidden; margin-bottom:24px}
+  .bar>i{display:block; height:100%; width:0; background:var(--accent); border-radius:99px; transition:width .25s ease}
+
+  /* ---------- options ---------- */
+  .qtext{font-size:19px; font-weight:600; line-height:1.4; margin:0 0 18px; letter-spacing:-.01em}
+  .options{display:flex; flex-direction:column; gap:10px}
+  .option{
+    display:flex; align-items:flex-start; gap:12px; width:100%; text-align:left;
+    padding:14px 16px; font:inherit; color:var(--ink); cursor:pointer;
+    background:var(--bg); border:1px solid var(--line-strong); border-radius:12px;
+  }
+  .option:hover{border-color:var(--accent)}
+  .option:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  .option[aria-checked="true"]{border-color:var(--accent); background:var(--accent-soft)}
+  .key{
+    flex:none; width:24px; height:24px; border-radius:7px; font-size:13px; font-weight:700;
+    display:grid; place-items:center; background:var(--card); border:1px solid var(--line-strong); color:var(--muted);
+  }
+  .option[aria-checked="true"] .key{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+  .err{color:var(--bad); font-size:14px; font-weight:500; margin-top:12px; min-height:0}
+
+  /* ---------- results ---------- */
+  .score{font-size:52px; font-weight:700; letter-spacing:-.03em; line-height:1.05; margin:4px 0 2px}
+  .score small{font-size:22px; font-weight:600; color:var(--muted)}
+  .band{font-size:17px; font-weight:600; margin:10px 0 4px}
+  .pill{display:inline-block; padding:4px 10px; border-radius:99px; font-size:13px; font-weight:600; background:var(--accent-soft); color:var(--accent)}
+  hr{border:0; border-top:1px solid var(--line); margin:24px 0}
+  .hist{font-size:14px; color:var(--muted); margin:0; padding-left:18px}
+  .hist li{margin:3px 0}
+  .status{font-size:13px; color:var(--muted); margin-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============================================================
+     SCREEN 1: handle entry
+     ============================================================ -->
+<main class="card" id="screen-intro">
+  <h1 id="intro-title">Growth Tactics Check</h1>
+  <p class="muted" id="intro-blurb"></p>
+  <p class="muted" id="intro-note"></p>
+
+  <label for="handle">Discord handle</label>
+  <input type="text" id="handle" placeholder="yourname"
+         autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="40">
+  <p class="err" id="handle-err" role="alert"></p>
+
+  <div class="row">
+    <button class="btn" id="start">Start the quiz</button>
+  </div>
+</main>
+
+<!-- ============================================================
+     SCREEN 2: questions
+     ============================================================ -->
+<main class="card hidden" id="screen-quiz">
+  <div class="meta">
+    <span id="q-counter"></span>
+    <span id="q-handle"></span>
+  </div>
+  <div class="bar"><i id="q-bar"></i></div>
+
+  <h2 class="qtext" id="q-text"></h2>
+  <div class="options" id="q-options" role="radiogroup" aria-labelledby="q-text"></div>
+  <p class="err" id="q-err" role="alert"></p>
+
+  <div class="row">
+    <button class="btn ghost" id="back">Back</button>
+    <span class="spacer"></span>
+    <button class="btn" id="next">Next</button>
+  </div>
+</main>
+
+<!-- ============================================================
+     SCREEN 3: results
+     ============================================================ -->
+<main class="card hidden" id="screen-results">
+  <span class="pill" id="r-attempt"></span>
+  <p class="score" id="r-score"></p>
+  <p class="band" id="r-band"></p>
+  <p class="muted" id="r-feedback"></p>
+
+  <p class="muted" id="r-retry-note">Answers aren't shown. That's deliberate.</p>
+
+  <div id="r-history-wrap" class="hidden">
+    <hr>
+    <p class="muted" style="font-weight:600; color:var(--ink); margin-bottom:8px">Your attempts on this device</p>
+    <ul class="hist" id="r-history"></ul>
+  </div>
+
+  <div class="row">
+    <button class="btn" id="retake">Take it again</button>
+  </div>
+  <p class="status" id="r-status"></p>
+</main>
+
+</div>
+
+<script>
+/* ==================================================================
+   CONFIG: everything you edit lives in this block.
+   ================================================================== */
+
+const CONFIG = {
+  /* The same deployment quiz 3 uses. Each quiz writes to its own tab in
+     that spreadsheet, named after its quizId, and the tab is created on
+     the first submission. Nothing to set up in Apps Script for this quiz. */
+  endpoint: "https://script.google.com/macros/s/AKfycbwFieype9akNag-2pQyBRrDmUJk-q40ek3OH30HKVAp4LaJdWM4L9fI8w-PSy-t155_/exec",
+
+  /* Names this quiz's tab in the spreadsheet. Keep it short, lowercase and
+     stable: changing it starts a second tab and splits this quiz's rows. */
+  quizId: "growth",
+
+  title:  "Growth Tactics Check",
+
+  /* The intro is one line: the question count and rough time are added
+     automatically, then this. Set blurb to add a second line above it,
+     or to "" to leave it out, which is what it does now. */
+  note:   "Your score at the end, but not the answers.",
+  blurb:  "",
+
+  /* Save attempts to this browser so returning users see their history.
+     Device-local only. The Google Sheet is the real record. */
+  localHistory: true
+};
+
+/* ------------------------------------------------------------------
+   QUESTIONS: `answer` is the 0-based index of the correct option,
+   so 0 = first option, 3 = fourth.
+   ------------------------------------------------------------------ */
+
+const QUESTIONS = [
+  { q: "What does a theme page's success depend on?",
+    options: [
+      "Posting at the same time every day",
+      "Getting attention and keeping viewers until the end",
+      "Following more accounts in your niche",
+      "Using the most popular sounds"
+    ], answer: 1 },
+
+  { q: "How long do you have to grab a viewer's attention?",
+    options: [
+      "The first second",
+      "The first 3 seconds",
+      "The first 10 seconds",
+      "The first quarter of the video"
+    ], answer: 1 },
+
+  { q: "Which of these is a good hook?",
+    options: [
+      "A caption that explains the video",
+      "Hashtags that match your niche",
+      "An opening that makes people curious and want to keep watching",
+      "Asking people to follow at the start"
+    ], answer: 2 },
+
+  { q: "Besides the hook, what else affects how well your content does?",
+    options: [
+      "The length of the caption",
+      "The quality of the background clips",
+      "How many accounts you followed that week",
+      "Whether you also post to Stories"
+    ], answer: 1 },
+
+  { q: "What is a call to action?",
+    options: [
+      "A caption that summarises the video",
+      "A hashtag that shows your niche",
+      "A prompt telling the viewer what to do next",
+      "The opening line of the video"
+    ], answer: 2 },
+
+  { q: "Where should the follow prompt go in the description?",
+    options: [
+      "At the very top, before the caption",
+      "Below the caption, above the hashtags",
+      "Mixed in with the hashtags",
+      "In the first comment"
+    ], answer: 1 },
+
+  { q: "Where else can a call to action appear?",
+    options: [
+      "Only in the description",
+      "As an animation at the end of the video",
+      "Only in comment replies",
+      "In your bio"
+    ], answer: 1 },
+
+  { q: "Which three actions should you encourage viewers to take?",
+    options: [
+      "Save, follow and subscribe",
+      "Watch, rewatch and screenshot",
+      "Comment, share and like",
+      "Follow, tag and repost"
+    ], answer: 2 },
+
+  { q: "In 2023, who did the algorithm show a new post to first?",
+    options: [
+      "A group of non-followers",
+      "Your followers, then non-followers",
+      "Everyone who had engaged with similar content",
+      "Straight to the Explore page"
+    ], answer: 1 },
+
+  { q: "What changed how the algorithm distributes content?",
+    options: [
+      "Platforms wanting more ad revenue",
+      "The rise of AI and bots on the platform",
+      "Creators posting more often",
+      "Shorter videos becoming more popular"
+    ], answer: 1 },
+
+  { q: "Who does a new post go to first now?",
+    options: [
+      "Your followers",
+      "Around 200 non-followers",
+      "A mix of followers and non-followers",
+      "People who engaged with your last post"
+    ], answer: 1 },
+
+  { q: "Your post reaches its first group and almost nobody engages. What happens?",
+    options: [
+      "It gets shown to your followers instead",
+      "It gets tried again at a better time",
+      "It stops there and doesn't get pushed further",
+      "It gets shown to a bigger group"
+    ], answer: 2 },
+
+  { q: "Who should you create every post for?",
+    options: [
+      "Your most loyal followers",
+      "Someone who has never seen your content before",
+      "Other creators in your niche",
+      "People most likely to comment"
+    ], answer: 1 },
+
+  { q: "\"Gambling can never work here.\" What does this mean?",
+    options: [
+      "Don't chase trends that may not last",
+      "Don't rely on one post to grow your page",
+      "Don't just post and hope. Give every post a clear purpose",
+      "Don't try formats you haven't tested"
+    ], answer: 2 },
+
+  { q: "Why do people follow a page?",
+    options: [
+      "Because the page follows them back",
+      "They get value from the page and decide to follow",
+      "Because the page posts consistently",
+      "Because they already search for that niche"
+    ], answer: 1 }
+];
+
+/* ------------------------------------------------------------------
+   BANDS: `minPct` is the lowest percentage that earns this band, so
+   these stay correct if you add or remove questions. Checked top to
+   bottom, so keep them in descending order.
+   ------------------------------------------------------------------ */
+
+const BANDS = [
+  { minPct: 100, label: "Full marks",
+    text: "You have the whole picture: the first three seconds, the call to action, and who the algorithm actually shows a post to first. Use the content to sharpen the execution, because knowing this and doing it on every post are different things." },
+
+  { minPct: 80, label: "Strong footing",
+    text: "You understand how reach is won and only missed a few. Go through the content, then come back and run this again. Full marks is well within reach." },
+
+  { minPct: 60, label: "Solid start",
+    text: "The hook and the call to action are landing, but how distribution actually works is still fuzzy. Work through the content properly, then take the quiz again and see how far you move." },
+
+  { minPct: 40, label: "Plenty to gain",
+    text: "You know some of it and there is real upside here. Go through the content in order, because posting without knowing who sees it first is the expensive way to learn this. Then take another run at this." },
+
+  { minPct: 0, label: "Fresh start",
+    text: "Most of this is new to you, which is exactly what this check is for. Start at the beginning and take your time, then come back to the quiz once you have been through it." }
+];
+
+/* ==================================================================
+   Below this line is the machinery. You shouldn't need to touch it.
+   ================================================================== */
+
+const TOTAL = QUESTIONS.length;
+const LS_HISTORY = "dq.growth.history.v1";
+const LS_PENDING = "dq.growth.pending.v1";
+const KEYS = ["A", "B", "C", "D", "E", "F"];
+
+const $ = id => document.getElementById(id);
+
+const state = { handle: "", index: 0, answers: new Array(TOTAL).fill(null) };
+
+/* ---------- localStorage, defensively ---------- */
+
+function lsRead(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    const val = raw ? JSON.parse(raw) : [];
+    return Array.isArray(val) ? val : [];
+  } catch (_) { return []; }
+}
+
+function lsWrite(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+  catch (_) { return false; }
+}
+
+/* ---------- submission ----------
+   Apps Script web apps don't return usable CORS headers on POST, so the
+   request goes out as a no-cors "simple request" (text/plain body, no
+   preflight). The response is opaque: a resolved fetch means the browser
+   handed the request off, not that the sheet wrote a row. Anything that
+   fails outright gets queued and retried on the next page load. */
+
+function postAttempt(payload) {
+  if (!CONFIG.endpoint) return Promise.reject(new Error("no endpoint configured"));
+  return fetch(CONFIG.endpoint, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+}
+
+function queuePending(payload) {
+  const pending = lsRead(LS_PENDING);
+  pending.push(payload);
+  lsWrite(LS_PENDING, pending.slice(-25));
+}
+
+function flushPending() {
+  const pending = lsRead(LS_PENDING);
+  if (!pending.length || !CONFIG.endpoint) return;
+  lsWrite(LS_PENDING, []);
+  pending.forEach(p => postAttempt(p).catch(() => queuePending(p)));
+}
+
+/* ---------- screens ---------- */
+
+function show(which) {
+  ["intro", "quiz", "results"].forEach(name => {
+    $("screen-" + name).classList.toggle("hidden", name !== which);
+  });
+  window.scrollTo(0, 0);
+}
+
+/* ---------- intro ---------- */
+
+/* A blank intro line is removed rather than left as an empty gap, so the
+   intro can be trimmed from CONFIG alone. */
+function introLine(id, text) {
+  const el = $(id);
+  el.textContent = text || "";
+  el.classList.toggle("hidden", !text);
+}
+
+function initIntro() {
+  document.title = CONFIG.title;
+  $("intro-title").textContent = CONFIG.title;
+  introLine("intro-blurb", CONFIG.blurb);
+  introLine("intro-note",
+    TOTAL + " questions, about " + Math.max(2, Math.round(TOTAL * 0.4)) +
+    " minutes. " + CONFIG.note);
+
+  $("handle").addEventListener("keydown", e => { if (e.key === "Enter") startQuiz(); });
+  $("handle").addEventListener("input", () => { $("handle-err").textContent = ""; });
+  $("start").addEventListener("click", startQuiz);
+}
+
+function startQuiz() {
+  const handle = $("handle").value.trim().replace(/^@/, "");
+  if (!handle) {
+    $("handle-err").textContent = "Enter your Discord handle so your score can be matched to you.";
+    $("handle").focus();
+    return;
+  }
+  if (handle.length < 2) {
+    $("handle-err").textContent = "That looks too short. Use the handle people see in the server.";
+    $("handle").focus();
+    return;
+  }
+  $("handle-err").textContent = "";
+  state.handle = handle;
+  state.index = 0;
+  state.answers = new Array(TOTAL).fill(null);
+  show("quiz");
+  renderQuestion();
+}
+
+/* ---------- quiz ---------- */
+
+function renderQuestion() {
+  const i = state.index;
+  const item = QUESTIONS[i];
+
+  $("q-counter").textContent = "Question " + (i + 1) + " of " + TOTAL;
+  $("q-handle").textContent = state.handle;
+  $("q-bar").style.width = ((i / TOTAL) * 100) + "%";
+  $("q-text").textContent = item.q;
+  $("q-err").textContent = "";
+
+  const box = $("q-options");
+  box.textContent = "";
+  item.options.forEach((text, idx) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "option";
+    btn.setAttribute("role", "radio");
+    btn.setAttribute("aria-checked", String(state.answers[i] === idx));
+
+    const key = document.createElement("span");
+    key.className = "key";
+    key.textContent = KEYS[idx];
+    const label = document.createElement("span");
+    label.textContent = text;
+
+    btn.append(key, label);
+    btn.addEventListener("click", () => select(idx));
+    box.appendChild(btn);
+  });
+
+  $("back").classList.toggle("hidden", i === 0);
+  $("next").textContent = (i === TOTAL - 1) ? "See my score" : "Next";
+}
+
+function select(idx) {
+  state.answers[state.index] = idx;
+  $("q-err").textContent = "";
+  Array.from($("q-options").children).forEach((btn, n) => {
+    btn.setAttribute("aria-checked", String(n === idx));
+  });
+}
+
+function goNext() {
+  if (state.answers[state.index] === null) {
+    $("q-err").textContent = "Pick an option to carry on.";
+    return;
+  }
+  if (state.index === TOTAL - 1) { finish(); return; }
+  state.index++;
+  renderQuestion();
+}
+
+function goBack() {
+  if (state.index === 0) return;
+  state.index--;
+  renderQuestion();
+}
+
+document.addEventListener("keydown", e => {
+  if ($("screen-quiz").classList.contains("hidden")) return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+  const n = "1234".indexOf(e.key);
+  if (n > -1 && n < QUESTIONS[state.index].options.length) { e.preventDefault(); select(n); return; }
+
+  const letter = KEYS.indexOf(e.key.toUpperCase());
+  if (letter > -1 && letter < QUESTIONS[state.index].options.length) { e.preventDefault(); select(letter); return; }
+
+  if (e.key === "Enter") { e.preventDefault(); goNext(); }
+});
+
+/* ---------- results ---------- */
+
+function scoreOf(answers) {
+  return answers.reduce((sum, a, i) => sum + (a === QUESTIONS[i].answer ? 1 : 0), 0);
+}
+
+function bandFor(score) {
+  const pct = (score / TOTAL) * 100;
+  return BANDS.find(b => pct >= b.minPct) || BANDS[BANDS.length - 1];
+}
+
+function finish() {
+  const score = scoreOf(state.answers);
+  const payload = {
+    handle: state.handle,
+    score: score,
+    total: TOTAL,
+    timestamp: new Date().toISOString(),
+    quiz: CONFIG.quizId
+  };
+
+  /* Local history first, because it must not depend on the network. */
+  let mine = [];
+  if (CONFIG.localHistory) {
+    const all = lsRead(LS_HISTORY);
+    all.push(payload);
+    lsWrite(LS_HISTORY, all.slice(-50));
+    mine = all.filter(a => (a.handle || "").toLowerCase() === state.handle.toLowerCase());
+  }
+
+  renderResults(score, mine);
+  show("results");
+
+  /* Then the sheet, in the background. */
+  if (CONFIG.endpoint) {
+    $("r-status").textContent = "Sending your result…";
+    postAttempt(payload)
+      .then(() => { $("r-status").textContent = "Result sent. You can close this page."; })
+      .catch(() => {
+        queuePending(payload);
+        $("r-status").textContent = "Couldn't reach the server. Your result is saved on this device and will be sent next time you open this page.";
+      });
+  } else {
+    $("r-status").textContent = "No storage endpoint is configured, so this result was saved on this device only.";
+  }
+}
+
+function renderResults(score, mine) {
+  const band = bandFor(score);
+
+  $("r-score").innerHTML = "";
+  $("r-score").append(String(score));
+  const small = document.createElement("small");
+  small.textContent = " / " + TOTAL;
+  $("r-score").appendChild(small);
+
+  $("r-band").textContent = band.label;
+  $("r-feedback").textContent = band.text;
+
+  /* Attempt number + comparison with the previous try on this device. */
+  const attemptPill = $("r-attempt");
+  if (mine.length > 1) {
+    const prev = mine[mine.length - 2];
+    const delta = score - prev.score;
+    const move = delta > 0 ? "up from " + prev.score
+               : delta < 0 ? "down from " + prev.score
+               : "same as last time";
+    attemptPill.textContent = "Attempt " + mine.length + ", " + move;
+    attemptPill.classList.remove("hidden");
+  } else {
+    attemptPill.textContent = state.handle;
+  }
+
+  /* History list. */
+  if (CONFIG.localHistory && mine.length > 1) {
+    const ul = $("r-history");
+    ul.textContent = "";
+    mine.slice().reverse().forEach((a, n) => {
+      const li = document.createElement("li");
+      const when = new Date(a.timestamp);
+      const stamp = isNaN(when) ? "" : when.toLocaleDateString(undefined, { day: "numeric", month: "short" }) +
+                                       ", " + when.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+      li.textContent = "Attempt " + (mine.length - n) + ": " + a.score + "/" + a.total + (stamp ? " · " + stamp : "");
+      ul.appendChild(li);
+    });
+    $("r-history-wrap").classList.remove("hidden");
+  } else {
+    $("r-history-wrap").classList.add("hidden");
+  }
+
+}
+
+function retake() {
+  $("handle").value = state.handle;
+  show("intro");
+}
+
+/* ---------- wire up ---------- */
+
+$("next").addEventListener("click", goNext);
+$("back").addEventListener("click", goBack);
+$("retake").addEventListener("click", retake);
+
+initIntro();
+flushPending();
+</script>
+</body>
+</html>
