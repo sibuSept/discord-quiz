@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Username or Page Name</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F5F5F7; --surface:#FFFFFF; --sunken:#EEEEF1;
+  --ink:#16171B; --muted:#65676F; --line:#DEDEE4;
+  --accent:#E8A317; --accent-line:#C9860A;
+  --ok:#1B8F63; --ok-soft:#E6F4ED; --ok-line:#9AD3BA;
+  --no:#C2372B; --no-soft:#FAE9E7; --no-line:#E3A9A3;
+  --focus:#2B6CB0;
+  --radius:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#111216; --surface:#191B20; --sunken:#23262C;
+    --ink:#ECEDF0; --muted:#989BA4; --line:#2F333B;
+    --accent:#F0B429; --accent-line:#F0B429;
+    --ok:#4ECB93; --ok-soft:#142A22; --ok-line:#2C6B52;
+    --no:#F08375; --no-soft:#2C1917; --no-line:#7A3B33;
+    --focus:#7FB2E8;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#111216; --surface:#191B20; --sunken:#23262C;
+  --ink:#ECEDF0; --muted:#989BA4; --line:#2F333B;
+  --accent:#F0B429; --accent-line:#F0B429;
+  --ok:#4ECB93; --ok-soft:#142A22; --ok-line:#2C6B52;
+  --no:#F08375; --no-soft:#2C1917; --no-line:#7A3B33;
+  --focus:#7FB2E8;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:680px; margin-inline:auto; padding-inline:20px; padding-block:36px 72px;
+  display:flex; flex-direction:column; gap:22px}
+.eyebrow{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin:0}
+.eyebrow .who{text-transform:none; letter-spacing:.02em; color:var(--ink)}
+h1{font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:clamp(26px,5.6vw,34px);
+  line-height:1.15; letter-spacing:-.015em; margin:6px 0 0; text-wrap:balance}
+.deck{margin:8px 0 0; color:var(--muted); max-width:52ch}
+.rail{display:flex; gap:4px; align-items:center}
+.tick{flex:1 1 0; height:6px; border-radius:3px; background:var(--line); min-width:6px}
+.tick.is-now{background:var(--accent)}
+.tick.is-ok{background:var(--ok)}
+.tick.is-no{background:var(--no)}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:24px; display:flex; flex-direction:column; gap:18px}
+.meta{display:flex; justify-content:space-between; align-items:baseline; gap:12px;
+  font-family:"JetBrains Mono",ui-monospace,monospace; font-size:12px; color:var(--muted);
+  font-variant-numeric:tabular-nums}
+.q{font-family:Archivo,system-ui,sans-serif; font-weight:600; font-size:20px; line-height:1.3;
+  letter-spacing:-.01em; margin:0; text-wrap:balance}
+.opts{display:flex; flex-direction:column; gap:10px}
+.opt{font:inherit; color:inherit; text-align:left; background:var(--surface);
+  border:1px solid var(--line); border-radius:10px; padding:13px 15px; cursor:pointer;
+  display:flex; gap:12px; align-items:flex-start; width:100%}
+.opt:hover:not(:disabled){border-color:var(--accent-line); background:var(--sunken)}
+.opt:disabled{cursor:default}
+.opt .key{font-family:"JetBrains Mono",ui-monospace,monospace; font-size:12px; color:var(--muted);
+  line-height:1.9; flex:0 0 auto}
+.opt.picked-ok{border-color:var(--ok-line); background:var(--ok-soft)}
+.opt.picked-no{border-color:var(--no-line); background:var(--no-soft)}
+.opt.show-ok{border-color:var(--ok-line)}
+.opt.picked-ok .key,.opt.show-ok .key{color:var(--ok)}
+.opt.picked-no .key{color:var(--no)}
+.handle{font-family:"JetBrains Mono",ui-monospace,monospace; font-size:.94em;
+  background:var(--sunken); border-radius:5px; padding:1px 5px}
+.verdict{display:flex; gap:10px; align-items:baseline; margin:0; font-size:15px}
+.verdict strong{font-family:Archivo,sans-serif; font-weight:700}
+.verdict.ok strong{color:var(--ok)}
+.verdict.no strong{color:var(--no)}
+.verdict span{color:var(--muted)}
+.row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+.btn{font:inherit; font-weight:500; border-radius:9px; padding:11px 20px; cursor:pointer;
+  border:1px solid transparent; background:var(--ink); color:var(--ground)}
+.btn:hover:not(:disabled){opacity:.88}
+.btn:disabled{opacity:.4; cursor:not-allowed}
+.btn.ghost{background:transparent; color:var(--ink); border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--accent-line)}
+label{display:block; font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:8px}
+input[type=text]{font:inherit; width:100%; background:var(--ground); color:var(--ink);
+  border:1px solid var(--line); border-radius:9px; padding:11px 14px}
+input[type=text]::placeholder{color:var(--muted); opacity:.7}
+.score{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap}
+.score b{font-family:Archivo,sans-serif; font-weight:700; font-size:48px; line-height:1;
+  letter-spacing:-.03em; font-variant-numeric:tabular-nums}
+.score em{font-style:normal; color:var(--muted)}
+.review{display:flex; flex-direction:column; gap:14px; margin:0; padding:0; list-style:none}
+.review li{border-left:2px solid var(--no); padding-left:14px}
+.review p{margin:0}
+.review .qq{font-weight:500}
+.review .aa{color:var(--muted); font-size:15px; margin-top:3px}
+.review .aa b{color:var(--ink); font-weight:500}
+.review .aa i{font-style:normal; color:var(--ok)}
+.note{font-size:13px; color:var(--muted); margin:0}
+:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+@media (max-width:420px){.card{padding:18px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <p class="eyebrow">Quiz 03 &middot; Setting up the page</p>
+    <h1>Username or page name?</h1>
+    <p class="deck">Twelve questions on the two names every page carries &mdash; the handle people type, and the name people search.</p>
+  </header>
+  <div class="rail" id="rail" aria-hidden="true"></div>
+  <section class="card" id="stage"></section>
+</main>
+
+<script>
+// Paste the Apps Script web-app URL here to log results to the sheet.
+// Left empty, the quiz still scores locally and nothing is submitted.
+var ENDPOINT = "";
+var QUIZ_NAME = "Quiz 3";
+
+var QUESTIONS = [
+  { q: "What's the difference between a username and a page name?",
+    a: ["The username shows on posts; the name shows on your profile",
+        "The username is your @handle; the name is what helps people find you",
+        "The name is permanent; the username can be changed",
+        "They're the same thing, shown in two places"], c: 1 },
+  { q: "Which of these is a username?",
+    a: ["Success the Grind",
+        "<span class=\"handle\">@successthegrind</span>",
+        "Mindset Motivation Wealth",
+        "Motivation"], c: 1 },
+  { q: "What job does the page name do that the username doesn't?",
+    a: ["Helps people find the page through search",
+        "Gives the account its unique ID",
+        "Appears beside every comment you leave",
+        "Can only be set when you create the account"], c: 0 },
+  { q: "Why does a username need to be easy to remember?",
+    a: ["So it fits within the character limit",
+        "So the algorithm can categorise the page",
+        "So someone who forgot to follow can search it later",
+        "So it's quicker to type on a phone"], c: 2 },
+  { q: "What's wrong with a username like <span class=\"handle\">@successly</span>?",
+    a: ["It's vague and carries no real meaning",
+        "It's too long to build a brand around",
+        "It's too close to other names in the niche",
+        "It gives away the niche too obviously"], c: 0 },
+  { q: "What's wrong with a username like <span class=\"handle\">@grindmotiveupside</span>?",
+    a: ["It's vague and carries no real meaning",
+        "It's too long to build a brand around",
+        "It isn't relevant to the niche",
+        "It's easy to misspell when searching"], c: 1 },
+  { q: "How many words should a username be?",
+    a: ["One", "Two", "Three", "As many as it takes to describe the niche"], c: 1 },
+  { q: "Can you change your username later?",
+    a: ["No, it's locked once the account is created",
+        "Yes, but sticking to one builds brand loyalty",
+        "Yes, and changing it often keeps the page fresh",
+        "Only before you reach a thousand followers"], c: 1 },
+  { q: "Where should you look for ideas when naming your page?",
+    a: ["At the topics dominating the pages in your niche",
+        "At names nobody in your niche has used yet",
+        "At what sounds best when said out loud",
+        "At the keywords with the least competition"], c: 0 },
+  { q: "What makes a stacked name like &ldquo;Mindset Motivation Wealth&rdquo; work?",
+    a: ["It covers several terms people search for in that niche",
+        "It's short enough to fit inside a handle",
+        "It's unusual enough that nobody else has it",
+        "It reads well out loud"], c: 0 },
+  { q: "Beyond search, what should guide the page name?",
+    a: ["Whatever your audience votes for",
+        "What's available on every platform",
+        "The shortest option that still makes sense",
+        "Something you'd be proud to present long term"], c: 3 },
+  { q: "A creator picks <span class=\"handle\">@zenvra</span> for their meditation page because it looks clean. What's the problem?",
+    a: ["It's vague &mdash; it says nothing about the page",
+        "It's too long to build a brand around",
+        "It isn't available on every platform",
+        "It's hard to pronounce"], c: 0 }
+];
+
+var LETTERS = ["A", "B", "C", "D"];
+var stage = document.getElementById("stage");
+var rail = document.getElementById("rail");
+var state = { name: "", i: 0, deck: [], results: [], locked: false };
+
+function shuffle(list){
+  var out = list.slice();
+  for (var i = out.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = out[i]; out[i] = out[j]; out[j] = t;
+  }
+  return out;
+}
+
+function buildDeck(){
+  return QUESTIONS.map(function(item){
+    var opts = shuffle(item.a.map(function(text, idx){
+      return { text: text, correct: idx === item.c };
+    }));
+    return { q: item.q, opts: opts, answer: item.a[item.c] };
+  });
+}
+
+function drawRail(showAll){
+  rail.innerHTML = "";
+  for (var i = 0; i < QUESTIONS.length; i++){
+    var t = document.createElement("div");
+    t.className = "tick";
+    var r = state.results[i];
+    if (r) t.className += r.correct ? " is-ok" : " is-no";
+    else if (!showAll && i === state.i && state.deck.length) t.className += " is-now";
+    rail.appendChild(t);
+  }
+}
+
+function el(tag, cls, html){
+  var n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (html != null) n.innerHTML = html;
+  return n;
+}
+
+function renderStart(){
+  state = { name: state.name, i: 0, deck: [], results: [], locked: false };
+  drawRail(false);
+  stage.innerHTML = "";
+  stage.appendChild(el("p", "q", "Before you start"));
+  var field = el("div");
+  var lab = el("label", null, "Your Discord username");
+  lab.setAttribute("for", "who");
+  var input = document.createElement("input");
+  input.type = "text"; input.id = "who"; input.placeholder = "e.g. successthegrind";
+  input.value = state.name;
+  input.autocomplete = "off";
+  field.appendChild(lab); field.appendChild(input);
+  stage.appendChild(field);
+  stage.appendChild(el("p", "note", "Twelve questions, one at a time. You'll see the right answer as you go, and a list of anything to review at the end."));
+  var go = el("button", "btn", "Start quiz");
+  go.id = "start";
+  go.disabled = input.value.trim().length < 2;
+  input.addEventListener("input", function(){ go.disabled = input.value.trim().length < 2; });
+  input.addEventListener("keydown", function(e){ if (e.key === "Enter" && !go.disabled) go.click(); });
+  go.addEventListener("click", function(){
+    state.name = input.value.trim();
+    state.deck = buildDeck();
+    state.i = 0; state.results = []; state.locked = false;
+    renderQuestion();
+  });
+  var row = el("div", "row"); row.appendChild(go);
+  stage.appendChild(row);
+}
+
+function renderQuestion(){
+  var item = state.deck[state.i];
+  state.locked = false;
+  drawRail(false);
+  stage.innerHTML = "";
+
+  var meta = el("div", "meta");
+  meta.appendChild(el("span", null, "Question " + (state.i + 1) + " / " + state.deck.length));
+  meta.appendChild(el("span", null, state.results.filter(function(r){ return r.correct; }).length + " correct"));
+  stage.appendChild(meta);
+  stage.appendChild(el("p", "q", item.q));
+
+  var opts = el("div", "opts");
+  item.opts.forEach(function(opt, idx){
+    var b = el("button", "opt");
+    b.type = "button";
+    b.appendChild(el("span", "key", LETTERS[idx]));
+    b.appendChild(el("span", null, opt.text));
+    b.addEventListener("click", function(){ pick(idx, opts, item); });
+    opts.appendChild(b);
+  });
+  stage.appendChild(opts);
+}
+
+function pick(idx, opts, item){
+  if (state.locked) return;
+  state.locked = true;
+  var correct = item.opts[idx].correct;
+  var buttons = opts.querySelectorAll(".opt");
+  for (var i = 0; i < buttons.length; i++){
+    buttons[i].disabled = true;
+    if (i === idx) buttons[i].classList.add(correct ? "picked-ok" : "picked-no");
+    else if (item.opts[i].correct && !correct) buttons[i].classList.add("show-ok");
+  }
+  state.results[state.i] = { q: item.q, correct: correct, answer: item.answer, picked: item.opts[idx].text };
+  drawRail(false);
+
+  var v = el("p", "verdict " + (correct ? "ok" : "no"));
+  v.appendChild(el("strong", null, correct ? "Correct" : "Not quite"));
+  v.appendChild(el("span", null, correct ? "" : "The right answer is marked above."));
+  stage.appendChild(v);
+
+  var last = state.i === state.deck.length - 1;
+  var next = el("button", "btn", last ? "See results" : "Next question");
+  next.addEventListener("click", function(){
+    if (last) { renderResults(); } else { state.i++; renderQuestion(); }
+  });
+  var row = el("div", "row"); row.appendChild(next);
+  stage.appendChild(row);
+  next.focus();
+}
+
+function renderResults(){
+  var total = state.deck.length;
+  var score = state.results.filter(function(r){ return r.correct; }).length;
+  var pct = Math.round(score / total * 100);
+  drawRail(true);
+  stage.innerHTML = "";
+
+  var head = el("p", "eyebrow", QUIZ_NAME + " \u00b7 ");
+  var who = el("span", "who");
+  who.textContent = state.name;
+  head.appendChild(who);
+  stage.appendChild(head);
+  var s = el("div", "score");
+  s.appendChild(el("b", null, score + " / " + total));
+  s.appendChild(el("em", null, pct + "% &middot; " + (pct === 100 ? "clean sweep" : pct >= 75 ? "solid" : "worth another run")));
+  stage.appendChild(s);
+
+  var missed = state.results.filter(function(r){ return !r.correct; });
+  if (missed.length){
+    stage.appendChild(el("p", "q", "What to review"));
+    var ul = el("ul", "review");
+    missed.forEach(function(r){
+      var li = el("li");
+      li.appendChild(el("p", "qq", r.q));
+      li.appendChild(el("p", "aa", "<i>Answer</i> &middot; <b>" + r.answer + "</b>"));
+      ul.appendChild(li);
+    });
+    stage.appendChild(ul);
+  } else {
+    stage.appendChild(el("p", "note", "Every question right &mdash; nothing to review."));
+  }
+
+  var status = el("p", "note", "");
+  stage.appendChild(status);
+
+  var row = el("div", "row");
+  var again = el("button", "btn ghost", "Retake quiz");
+  again.addEventListener("click", renderStart);
+  row.appendChild(again);
+  stage.appendChild(row);
+
+  submit(score, total, pct, status);
+}
+
+function submit(score, total, pct, status){
+  if (!ENDPOINT) return;
+  status.textContent = "Sending your result…";
+  var body = new URLSearchParams({
+    quiz: QUIZ_NAME,
+    name: state.name,
+    score: String(score),
+    total: String(total),
+    percent: String(pct),
+    answers: JSON.stringify(state.results.map(function(r){
+      return { q: r.q.replace(/<[^>]+>/g, ""), correct: r.correct };
+    }))
+  });
+  fetch(ENDPOINT, { method: "POST", mode: "no-cors", body: body })
+    .then(function(){ status.textContent = "Result sent."; })
+    .catch(function(){ status.textContent = "Couldn't send your result — screenshot this score and post it in the channel."; });
+}
+
+renderStart();
+</script>
+</body>
+</html>
