@@ -114,6 +114,43 @@ those rows all predate the column. It runs once and never touches those rows
 again. A page that sends no `quizId` at all is also recorded as
 `theme-pages`, so the theme page quiz keeps working without being redeployed.
 
+### Giving a quiz its own sheet
+
+This is what quiz 3 does. It is more clicking than sharing a sheet, but it
+touches nothing that is already running and it does not depend on knowing
+which spreadsheet the existing script project is bound to.
+
+There is no separate procedure: **do Part 1 again from the top**, in a new
+spreadsheet. Paste the same unmodified `apps-script/Code.gs` into the new
+project. Do not fork the script. One file, deployed in two places, is the
+arrangement that stays understandable; two files that have drifted apart is
+how a sheet ends up with rows in two different shapes.
+
+Four things worth knowing before you start:
+
+- **`Code.gs` needs no changes for a fresh sheet.** On an empty spreadsheet
+  it creates the `Responses` tab, writes the headers and formats the
+  columns. The backfill that stamps old rows `theme-pages` only runs on a
+  sheet that already has rows, so on a new one it never fires.
+- **Keep the `quizId`.** A sheet with one quiz in it does not need the Quiz
+  column to tell anything apart, but the label costs nothing and means these
+  rows can be merged into the shared sheet later without guessing where they
+  came from. Quiz 3 sends `names`.
+- **The new project is a separate deployment with its own URL.** Nothing you
+  do to it affects quizzes 1 and 2, and redeploying theirs does not affect
+  this one.
+- **`DEFAULT_QUIZ` in `Code.gs` is still `theme-pages`.** It only applies to
+  a submission that arrives with no quiz name at all, which none of the three
+  pages sends. It is worth knowing anyway: point some future page at this
+  endpoint without setting a `quizId` and its rows will be labelled
+  `theme-pages` in a sheet that has nothing to do with the theme page quiz.
+
+Then paste the `/exec` URL into `CONFIG.endpoint` in `quiz-3/index.html`,
+which is deliberately blank until you do. Blank is the safe state: the quiz
+runs and scores normally and posts nothing, so it cannot put rows in the
+wrong spreadsheet while you are still setting it up. Do not paste quiz 2's
+URL in as a placeholder.
+
 ---
 
 ## Part 2: Putting the page online
@@ -150,7 +187,7 @@ for you, not for the server, though it does no harm if they go up too.
 
 1. Open the deployed URL.
 2. Enter a throwaway handle like `test-run`.
-3. Answer all fifteen, hit **See my score**.
+3. Answer every question, hit **See my score**.
 4. The results screen should say *"Result sent."*
 5. Check the sheet. A **Responses** tab now exists with your row in it.
 6. Delete that test row before sharing the link.
@@ -179,10 +216,12 @@ Attempt history falls out of this for free. Filter or sort by **Handle** and
 you see every attempt that person made, with timestamps. Three attempts is
 three rows.
 
-If both quizzes write to this sheet, filter by **Quiz** before you read
-anything as a single quiz's results. `theme-pages` is the theme page quiz, `niche` is
-the niche one. Scores are not comparable across the two: they are different
-questions.
+If more than one quiz writes to this sheet, filter by **Quiz** before you
+read anything as a single quiz's results. `theme-pages` is the theme page
+quiz, `niche` is the niche one, `names` is the usernames and page names one.
+Scores are not comparable across them: they are different questions, and
+quiz 3 is out of twelve rather than fifteen. Use the **Percent** column if
+you ever want to compare across quizzes at all.
 
 Useful formulas, dropped into an empty cell on another tab:
 

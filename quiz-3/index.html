@@ -170,13 +170,22 @@
    ================================================================== */
 
 const CONFIG = {
-  /* The deployment carrying the updated Code.gs, the one with the Quiz
-     column. Quiz 3 needs no Apps Script setup of its own: a new quizId is
-     all it takes to land in the same sheet, labelled. See SETUP.md. */
-  endpoint: "https://script.google.com/macros/s/AKfycbzVKuO377whES3fwbvGsxxHS1X_ctW-bWx64ueuQYt-ptq_rimH1NrHh6ynTLxJxnS7/exec",
+  /* This quiz gets its own Sheet and its own Apps Script deployment rather
+     than sharing the one quizzes 1 and 2 post to. Paste the /exec URL here
+     once you have it: SETUP.md, "Giving a quiz its own sheet".
 
-  /* Goes in the Quiz column of the shared sheet. Keep it short and keep
-     it stable: changing it splits this quiz's rows in two. */
+     Left blank deliberately until then. Blank is the safe state: the quiz
+     runs and scores normally, saves attempts to the device, and posts
+     nothing, so it cannot land rows in the wrong spreadsheet while you are
+     still setting this up. Do not paste quiz 2's URL in here as a
+     placeholder. */
+  endpoint: "",
+
+  /* Goes in the Quiz column. This quiz has a sheet to itself, so nothing
+     here needs telling apart today, but the label costs nothing and means
+     these rows can be merged into the shared sheet later without guessing
+     where they came from. Keep it short and keep it stable: changing it
+     splits this quiz's rows in two. */
   quizId: "names",
 
   title:  "Username and Page Name Check",

@@ -6,36 +6,52 @@ an exam. Scores are plain arithmetic, computed in the browser.
 
 No backend, no AI, no API keys, no running costs.
 
-Two quizzes live here. They share the same code, and differ only in their
+Three quizzes live here. They share the same code, and differ only in their
 `CONFIG`, `QUESTIONS` and `BANDS` blocks:
 
 ```
 index.html              quiz 1: running and monetising theme pages, 15 questions
 niche-quiz/index.html   quiz 2: choosing a niche, 15 questions
+quiz-3/index.html       quiz 3: usernames and page names, 12 questions
 apps-script/Code.gs     Google Apps Script that writes submissions to a Sheet
 SETUP.md                step-by-step: the Sheet endpoint, then hosting
 NEW-QUIZ-BRIEF.md       context handoff for building further quizzes
 ```
 
-Each quiz is deployed as its own site, so each has its own URL, and each
-posts to its own Apps Script deployment. Whether those two deployments write
-to the same spreadsheet depends on which file each script project is bound
-to, which is worth confirming rather than assuming: a script opened from a
-sheet via **Extensions > Apps Script** always belongs to that sheet.
+Quiz 3 is twelve questions rather than fifteen because the piece behind it
+carries two ideas and the rest is examples. The bands are percentage based,
+so a different question count needs no other change.
 
-Either way every row carries a **Quiz** column, from `CONFIG.quizId` in each
-page: `theme-pages` and `niche`. In one shared sheet that column is what
-tells the two apart. In separate sheets it costs nothing and means the two
-can be merged later without guessing which rows came from where.
+Each quiz is deployed as its own site, so each has its own URL, and each
+posts to its own Apps Script deployment.
+
+Quizzes 1 and 2 post to two deployments of one script project, so they write
+to whichever spreadsheet that project is bound to. Which file that is has
+never been confirmed and is worth establishing rather than assuming: a script
+opened from a sheet via **Extensions > Apps Script** always belongs to that
+sheet.
+
+**Quiz 3 gets its own Sheet and its own script project**, deliberately, so it
+does not depend on that answer. Its `CONFIG.endpoint` is blank until that
+deployment exists. See SETUP.md, "Giving a quiz its own sheet".
+
+Every row carries a **Quiz** column either way, from `CONFIG.quizId` in each
+page: `theme-pages`, `niche` and `names`. In one shared sheet that column is
+what tells the quizzes apart. In a sheet of its own it costs nothing and
+means those rows can be merged in later without guessing where they came
+from.
 
 Changing `Code.gs` means redeploying it in the Apps Script editor before the
 page that depends on the change goes live, and a deployment runs whichever
 version was current when it was deployed. Two deployments of the same
 project can be running different code. See SETUP.md.
 
-Because the two are served from different origins, their `localStorage`
-never collides. The storage keys are namespaced per quiz as well, so they
-stay separate even if both are ever served from one domain.
+Because each is served from a different origin, their `localStorage` never
+collides. The keys are distinct regardless, so they would stay separate even
+if all three were ever served from one domain: `dq.history.v1` for quiz 1,
+then `dq.niche.*` and `dq.names.*`. Quiz 1's keys predate the per-quiz
+namespacing and were left alone rather than renamed, since renaming them
+would orphan the attempt history of everyone who has already taken it.
 
 ## Quick start
 
@@ -43,13 +59,14 @@ stay separate even if both are ever served from one domain.
    section of the quiz you are changing.
 2. Follow **SETUP.md** to create the Google Sheet endpoint and paste its
    URL into `CONFIG.endpoint`.
-3. Drop the file onto Cloudflare Pages or Netlify. For quiz 2, drag the
-   whole `niche-quiz` folder, which serves its `index.html` at the root.
+3. Drop the file onto Cloudflare Pages or Netlify. For quizzes 2 and 3,
+   drag the whole `niche-quiz` or `quiz-3` folder, which serves its
+   `index.html` at the root.
 4. Paste the link in Discord.
 
-Open either `index.html` directly in a browser to preview at any point. With
+Open any `index.html` directly in a browser to preview at any point. With
 `CONFIG.endpoint` left blank it runs fully, scoring locally and sending
-nothing.
+nothing, which is exactly the state quiz 3 is in right now.
 
 ## How it works
 
