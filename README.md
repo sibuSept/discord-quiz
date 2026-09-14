@@ -14,6 +14,7 @@ index.html              quiz 1: running and monetising theme pages, 15 questions
 niche-quiz/index.html   quiz 2: choosing a niche, 15 questions
 quiz-3/index.html       quiz 3: usernames and page names, 12 questions
 apps-script/Code.gs     Google Apps Script that writes submissions to a Sheet
+apps-script/test/       runs Code.gs against a fake spreadsheet, in plain Node
 SETUP.md                step-by-step: the Sheet endpoint, then hosting
 NEW-QUIZ-BRIEF.md       context handoff for building further quizzes
 ```
@@ -35,16 +36,31 @@ sheet.
 does not depend on that answer. Its `CONFIG.endpoint` is blank until that
 deployment exists. See SETUP.md, "Giving a quiz its own sheet".
 
-Every row carries a **Quiz** column either way, from `CONFIG.quizId` in each
-page: `theme-pages`, `niche` and `names`. In one shared sheet that column is
-what tells the quizzes apart. In a sheet of its own it costs nothing and
-means those rows can be merged in later without guessing where they came
-from.
+**Each quiz writes to its own tab**, named after its `quizId`:
+`theme-pages`, `niche`, `names`. The script creates the tab, heads it and
+formats it the first time a score arrives for that quiz, so adding a quiz
+means giving it a new `quizId` and pointing it at the same web app URL.
+Nothing to edit in the script, nothing to redeploy.
+
+Quiz names are not trusted with tab creation, since the endpoint URL is
+public: only plain lowercase names become tabs, and at most twelve of them.
+Anything else is still recorded, in a tab called `Unknown`.
+
+Every row also carries a **Quiz** column, which is redundant once the tabs
+are separate and kept anyway: one cell, and a row still says where it came
+from if the tabs are ever merged or exported.
 
 Changing `Code.gs` means redeploying it in the Apps Script editor before the
 page that depends on the change goes live, and a deployment runs whichever
 version was current when it was deployed. Two deployments of the same
 project can be running different code. See SETUP.md.
+
+`Code.gs` writes to live data, so it has tests that run it against a fake
+spreadsheet with no network and no Google account:
+
+```
+node apps-script/test/test-codegs.js
+```
 
 Because each is served from a different origin, their `localStorage` never
 collides. The keys are distinct regardless, so they would stay separate even
