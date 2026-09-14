@@ -7,12 +7,12 @@ the decisions from the five that exist.
 
 ## What already exists and works
 
-Six multiple-choice knowledge checks for a Discord community of about 100
+Seven multiple-choice knowledge checks for a Discord community of about 100
 people, taken **before** they consume the content, so each reads as a
 starting point rather than an exam.
 
 - **Repo:** `sibuSept/discord-quiz`
-- **Branch with all six:** `claude/exciting-franklin-epxhwl`
+- **Branch with all seven:** `claude/exciting-franklin-epxhwl`
 - **Quiz 1:** running and monetising theme pages, 15 questions. Live on
   Netlify and recording.
 - **Quiz 2:** choosing a niche, 15 questions. Built and verified, not yet
@@ -21,6 +21,7 @@ starting point rather than an exam.
 - **Quiz 4:** growth tactics, 15 questions. Built and verified.
 - **Quiz 5:** profile picture and bio, 15 questions. Built and verified.
 - **Quiz 6:** mindset and social proof, 13 questions. Built and verified.
+- **Quiz 7:** posting times and expectations, 11 questions. Built and verified.
 - **Storage:** Google Sheets via Google Apps Script web apps.
 - `main` has none of it. Everything is on feature branches and no pull
   request has been opened.
@@ -32,6 +33,7 @@ quiz-3/index.html       quiz 3, COPY THIS ONE (or quiz 4 or 5, same shape)
 quiz-4/index.html       quiz 4
 quiz-5/index.html       quiz 5
 quiz-6/index.html       quiz 6
+quiz-7/index.html       quiz 7
 apps-script/Code.gs     the Apps Script that writes submissions to a Sheet
 apps-script/test/       runs Code.gs against a fake spreadsheet, in Node
 tools/shuffle-options.py  evens out where the correct answer sits
@@ -226,9 +228,10 @@ rule rules out a linked image file.
   reading a question. Run `tools/shuffle-options.py`, which reorders options
   only, never the wording and never which option is correct, seeded from the
   quizId so the diff is reviewable. Then assert the key again. **Check the
-  sequence as well as the counts:** quiz 6 arrived evenly spread but with its
-  positions running 2,0,3,1 and repeating that cycle twice, which is just as
-  followable as a bunch of Bs.
+  sequence as well as the counts.** Quiz 6 arrived evenly spread with its
+  positions running 2,0,3,1 twice over; quiz 7 ran B,C,A,D straight through
+  all eleven. A perfect spread and a perfect cycle look identical to a
+  counter and are just as followable as a bunch of Bs.
 - **British spelling** in user facing copy (monetising, not monetizing).
 
 ## Explicitly out of scope
