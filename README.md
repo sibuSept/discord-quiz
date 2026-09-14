@@ -6,7 +6,7 @@ an exam. Scores are plain arithmetic, computed in the browser.
 
 No backend, no AI, no API keys, no running costs.
 
-Five quizzes live here. They share the same code, and differ only in their
+Six quizzes live here. They share the same code, and differ only in their
 `CONFIG`, `QUESTIONS` and `BANDS` blocks:
 
 ```
@@ -15,6 +15,7 @@ niche-quiz/index.html   quiz 2: choosing a niche, 15 questions
 quiz-3/index.html       quiz 3: usernames and page names, 12 questions
 quiz-4/index.html       quiz 4: growth tactics, 15 questions
 quiz-5/index.html       quiz 5: profile picture and bio, 15 questions
+quiz-6/index.html       quiz 6: mindset and social proof, 13 questions
 apps-script/Code.gs     Google Apps Script that writes submissions to a Sheet
 apps-script/test/       runs Code.gs against a fake spreadsheet, in plain Node
 tools/shuffle-options.py  evens out where the correct answer sits
@@ -41,7 +42,8 @@ does not depend on that answer. Its `CONFIG.endpoint` is blank until that
 deployment exists. See SETUP.md, "Giving a quiz its own sheet".
 
 **Each quiz writes to its own tab**, named after its `quizId`:
-`theme-pages`, `niche`, `names`, `growth`, `bio`. The script creates the tab, heads it and
+`theme-pages`, `niche`, `names`, `growth`, `bio`, `mindset`. The script creates
+the tab, heads it and
 formats it the first time a score arrives for that quiz, so adding a quiz
 means giving it a new `quizId` and pointing it at the same web app URL.
 Nothing to edit in the script, nothing to redeploy.
@@ -69,7 +71,7 @@ node apps-script/test/test-codegs.js
 Because each is served from a different origin, their `localStorage` never
 collides. The keys are distinct regardless, so they would stay separate even
 if all three were ever served from one domain: `dq.history.v1` for quiz 1,
-then `dq.niche.*`, `dq.names.*`, `dq.growth.*` and `dq.bio.*`. Quiz 1's keys predate the per-quiz
+then `dq.niche.*`, `dq.names.*`, `dq.growth.*`, `dq.bio.*` and `dq.mindset.*`. Quiz 1's keys predate the per-quiz
 namespacing and were left alone rather than renamed, since renaming them
 would orphan the attempt history of everyone who has already taken it.
 
@@ -80,8 +82,8 @@ would orphan the attempt history of everyone who has already taken it.
 2. Follow **SETUP.md** to create the Google Sheet endpoint and paste its
    URL into `CONFIG.endpoint`.
 3. Drop the file onto Cloudflare Pages or Netlify. For quizzes 2 onward,
-   drag the whole `niche-quiz`, `quiz-3`, `quiz-4` or `quiz-5` folder,
-   which serves its `index.html` at the root.
+   drag the whole `niche-quiz` or `quiz-N` folder, which serves its
+   `index.html` at the root.
 4. Paste the link in Discord.
 
 Open any `index.html` directly in a browser to preview at any point. With
@@ -103,7 +105,10 @@ python3 tools/shuffle-options.py quiz-5/index.html           # even it out
 ```
 
 Run it on any new quiz, then re-check the answer key against what the author
-ticked.
+ticked. **An even count is not enough on its own:** quiz 6 arrived with a
+tidy 3/3/4/3 spread whose positions ran 2,0,3,1 and then repeated that cycle
+twice, which a taker can follow without knowing anything. `--check` reports
+the count; read the sequence yourself.
 
 **No em dashes, with one exception.** Copy, comments and docs use full stops,
 colons or a rewritten clause. `quiz-5/index.html` is the single agreed

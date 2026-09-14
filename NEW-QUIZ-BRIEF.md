@@ -7,12 +7,12 @@ the decisions from the five that exist.
 
 ## What already exists and works
 
-Five multiple-choice knowledge checks for a Discord community of about 100
+Six multiple-choice knowledge checks for a Discord community of about 100
 people, taken **before** they consume the content, so each reads as a
 starting point rather than an exam.
 
 - **Repo:** `sibuSept/discord-quiz`
-- **Branch with all five:** `claude/exciting-franklin-epxhwl`
+- **Branch with all six:** `claude/exciting-franklin-epxhwl`
 - **Quiz 1:** running and monetising theme pages, 15 questions. Live on
   Netlify and recording.
 - **Quiz 2:** choosing a niche, 15 questions. Built and verified, not yet
@@ -20,6 +20,7 @@ starting point rather than an exam.
 - **Quiz 3:** usernames and page names, 12 questions. Built and verified.
 - **Quiz 4:** growth tactics, 15 questions. Built and verified.
 - **Quiz 5:** profile picture and bio, 15 questions. Built and verified.
+- **Quiz 6:** mindset and social proof, 13 questions. Built and verified.
 - **Storage:** Google Sheets via Google Apps Script web apps.
 - `main` has none of it. Everything is on feature branches and no pull
   request has been opened.
@@ -30,6 +31,7 @@ niche-quiz/index.html   quiz 2
 quiz-3/index.html       quiz 3, COPY THIS ONE (or quiz 4 or 5, same shape)
 quiz-4/index.html       quiz 4
 quiz-5/index.html       quiz 5
+quiz-6/index.html       quiz 6
 apps-script/Code.gs     the Apps Script that writes submissions to a Sheet
 apps-script/test/       runs Code.gs against a fake spreadsheet, in Node
 tools/shuffle-options.py  evens out where the correct answer sits
@@ -223,7 +225,10 @@ rule rules out a linked image file.
   five Cs with no As and no Ds, so picking B every time scored 10/15 without
   reading a question. Run `tools/shuffle-options.py`, which reorders options
   only, never the wording and never which option is correct, seeded from the
-  quizId so the diff is reviewable. Then assert the key again.
+  quizId so the diff is reviewable. Then assert the key again. **Check the
+  sequence as well as the counts:** quiz 6 arrived evenly spread but with its
+  positions running 2,0,3,1 and repeating that cycle twice, which is just as
+  followable as a bunch of Bs.
 - **British spelling** in user facing copy (monetising, not monetizing).
 
 ## Explicitly out of scope
