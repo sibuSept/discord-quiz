@@ -210,11 +210,11 @@ const CONFIG = {
 const QUESTIONS = [
   { q: "What's the difference between a username and a page name?",
     options: [
-      "The username shows on posts; the name shows on your profile",
       "The username is your @handle; the name is what helps people find you",
       "The name is permanent; the username can be changed",
+      "The username shows on posts; the name shows on your profile",
       "They're the same thing, shown in two places"
-    ], answer: 1 },
+    ], answer: 0 },
 
   { q: "Which of these is a username?",
     options: [
@@ -227,18 +227,18 @@ const QUESTIONS = [
   { q: "What job does the page name do that the username doesn't?",
     options: [
       "Helps people find the page through search",
+      "Can only be set when you create the account",
       "Gives the account its unique ID",
-      "Appears beside every comment you leave",
-      "Can only be set when you create the account"
+      "Appears beside every comment you leave"
     ], answer: 0 },
 
   { q: "Why does a username need to be easy to remember?",
     options: [
       "So it fits within the character limit",
-      "So the algorithm can categorise the page",
       "So someone who forgot to follow can search it later",
+      "So the algorithm can categorise the page",
       "So it's quicker to type on a phone"
-    ], answer: 2 },
+    ], answer: 1 },
 
   /* 5 and 6 are a deliberate pair: same shape, two different failure
      modes, and the distractors cross over so anyone guessing off the
@@ -246,70 +246,70 @@ const QUESTIONS = [
      wording parallel. */
   { q: "What's wrong with a username like @successly?",
     options: [
+      "It gives away the niche too obviously",
       "It's vague and carries no real meaning",
-      "It's too long to build a brand around",
       "It's too close to other names in the niche",
-      "It gives away the niche too obviously"
-    ], answer: 0 },
+      "It's too long to build a brand around"
+    ], answer: 1 },
 
   { q: "What's wrong with a username like @grindmotiveupside?",
     options: [
+      "It isn't relevant to the niche",
       "It's vague and carries no real meaning",
       "It's too long to build a brand around",
-      "It isn't relevant to the niche",
       "It's easy to misspell when searching"
-    ], answer: 1 },
+    ], answer: 2 },
 
   { q: "How many words should a username be?",
     options: [
+      "As many as it takes to describe the niche",
       "One",
-      "Two",
       "Three",
-      "As many as it takes to describe the niche"
-    ], answer: 1 },
+      "Two"
+    ], answer: 3 },
 
   { q: "Can you change your username later?",
     options: [
-      "No, it's locked once the account is created",
-      "Yes, but sticking to one builds brand loyalty",
       "Yes, and changing it often keeps the page fresh",
-      "Only before you reach a thousand followers"
-    ], answer: 1 },
+      "No, it's locked once the account is created",
+      "Only before you reach a thousand followers",
+      "Yes, but sticking to one builds brand loyalty"
+    ], answer: 3 },
 
   { q: "Where should you look for ideas when naming your page?",
     options: [
-      "At the topics dominating the pages in your niche",
-      "At names nobody in your niche has used yet",
+      "At the keywords with the least competition",
       "At what sounds best when said out loud",
-      "At the keywords with the least competition"
-    ], answer: 0 },
+      "At names nobody in your niche has used yet",
+      "At the topics dominating the pages in your niche"
+    ], answer: 3 },
 
   { q: "What makes a stacked name like \"Mindset Motivation Wealth\" work?",
     options: [
       "It covers several terms people search for in that niche",
-      "It's short enough to fit inside a handle",
       "It's unusual enough that nobody else has it",
-      "It reads well out loud"
+      "It reads well out loud",
+      "It's short enough to fit inside a handle"
     ], answer: 0 },
 
   { q: "Beyond search, what should guide the page name?",
     options: [
-      "Whatever your audience votes for",
-      "What's available on every platform",
       "The shortest option that still makes sense",
-      "Something you'd be proud to present long term"
-    ], answer: 3 },
+      "Whatever your audience votes for",
+      "Something you'd be proud to present long term",
+      "What's available on every platform"
+    ], answer: 2 },
 
   /* The transfer question: question 5's idea applied to a case that is
      not in the source piece. This is the one that separates understanding
      from recall, so do not swap it for another worked example. */
   { q: "A creator picks @zenvra for their meditation page because it looks clean. What's the problem?",
     options: [
-      "It's vague and says nothing about the page",
-      "It's too long to build a brand around",
       "It isn't available on every platform",
+      "It's too long to build a brand around",
+      "It's vague and says nothing about the page",
       "It's hard to pronounce"
-    ], answer: 0 }
+    ], answer: 2 }
 ];
 
 /* ------------------------------------------------------------------

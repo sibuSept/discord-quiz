@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Growth Tactics Check</title>
+<title>Profile and Bio Check</title>
 <style>
   :root{
     --bg:#f4f5f9; --card:#ffffff; --ink:#1b1d25; --muted:#61667a;
@@ -104,7 +104,7 @@
      SCREEN 1: handle entry
      ============================================================ -->
 <main class="card" id="screen-intro">
-  <h1 id="intro-title">Growth Tactics Check</h1>
+  <h1 id="intro-title">Profile and Bio Check</h1>
   <p class="muted" id="intro-blurb"></p>
   <p class="muted" id="intro-note"></p>
 
@@ -170,16 +170,16 @@
    ================================================================== */
 
 const CONFIG = {
-  /* The same deployment quiz 3 uses. Each quiz writes to its own tab in
-     that spreadsheet, named after its quizId, and the tab is created on
-     the first submission. Nothing to set up in Apps Script for this quiz. */
+  /* The same deployment quizzes 3 and 4 use. Each quiz writes to its own
+     tab in that spreadsheet, named after its quizId, and the tab is created
+     on the first submission. Nothing to set up in Apps Script for this one. */
   endpoint: "https://script.google.com/macros/s/AKfycbwFieype9akNag-2pQyBRrDmUJk-q40ek3OH30HKVAp4LaJdWM4L9fI8w-PSy-t155_/exec",
 
   /* Names this quiz's tab in the spreadsheet. Keep it short, lowercase and
      stable: changing it starts a second tab and splits this quiz's rows. */
-  quizId: "growth",
+  quizId: "bio",
 
-  title:  "Growth Tactics Check",
+  title:  "Profile and Bio Check",
 
   /* The intro is one line: the question count and rough time are added
      automatically, then this. Set blurb to add a second line above it,
@@ -195,127 +195,135 @@ const CONFIG = {
 /* ------------------------------------------------------------------
    QUESTIONS: `answer` is the 0-based index of the correct option,
    so 0 = first option, 3 = fourth.
+
+   EM DASHES ARE DELIBERATE IN THIS FILE. The project rule is to use none
+   anywhere, in copy, comments or docs. This quiz is the single exception,
+   agreed with the author, because the dashes are load bearing in the
+   options that pair a verdict with its reason. Do not strip them here,
+   and do not take this file as licence to add them anywhere else.
+
+   Option order in this file was shuffled, see the note on BANDS below.
    ------------------------------------------------------------------ */
 
 const QUESTIONS = [
-  { q: "What does a theme page's success depend on?",
+  { q: "What do potential followers look at first?",
     options: [
-      "Using the most popular sounds",
-      "Posting at the same time every day",
-      "Following more accounts in your niche",
-      "Getting attention and keeping viewers until the end"
+      "The bio",
+      "The follower count",
+      "The most recent post",
+      "The profile picture"
     ], answer: 3 },
 
-  { q: "How long do you have to grab a viewer's attention?",
+  { q: "What do the biggest brands have in common with their logos?",
     options: [
-      "The first quarter of the video",
-      "The first 10 seconds",
-      "The first 3 seconds",
-      "The first second"
-    ], answer: 2 },
-
-  { q: "Which of these is a good hook?",
-    options: [
-      "An opening that makes people curious and want to keep watching",
-      "A caption that explains the video",
-      "Asking people to follow at the start",
-      "Hashtags that match your niche"
+      "They're simple",
+      "They spell out the full company name",
+      "They change them regularly to stay current",
+      "They use bright, saturated colour"
     ], answer: 0 },
 
-  { q: "Besides the hook, what else affects how well your content does?",
+  { q: "What kind of profile picture should a theme page use?",
     options: [
-      "The quality of the background clips",
-      "How many accounts you followed that week",
-      "Whether you also post to Stories",
-      "The length of the caption"
-    ], answer: 0 },
-
-  { q: "What is a call to action?",
-    options: [
-      "A prompt telling the viewer what to do next",
-      "The opening line of the video",
-      "A caption that summarises the video",
-      "A hashtag that shows your niche"
-    ], answer: 0 },
-
-  { q: "Where should the follow prompt go in the description?",
-    options: [
-      "At the very top, before the caption",
-      "Mixed in with the hashtags",
-      "Below the caption, above the hashtags",
-      "In the first comment"
+      "Something busy enough to stand out in a feed",
+      "A photo of the person running the page",
+      "A high-contrast logo or a clean icon",
+      "A screenshot from the best-performing post"
     ], answer: 2 },
 
-  { q: "Where else can a call to action appear?",
+  { q: "You have no budget for a logo. What's the move?",
     options: [
-      "Only in comment replies",
-      "Only in the description",
-      "As an animation at the end of the video",
-      "In your bio"
+      "Ask followers to submit designs",
+      "Use a stock image until you can afford better",
+      "Make one yourself in a free design tool like Canva",
+      "Run without a profile picture for now"
     ], answer: 2 },
 
-  { q: "Which three actions should you encourage viewers to take?",
+  { q: "You do have budget. What's the move?",
     options: [
-      "Save, follow and subscribe",
-      "Comment, share and like",
-      "Watch, rewatch and screenshot",
-      "Follow, tag and repost"
+      "Buy a pre-made logo pack",
+      "Hire a freelancer on a platform like Fiverr or Upwork",
+      "Commission a full brand identity before launching",
+      "Pay for a premium design app subscription"
     ], answer: 1 },
 
-  { q: "In 2023, who did the algorithm show a new post to first?",
+  { q: "What does the bio act as?",
     options: [
-      "A group of non-followers",
-      "Everyone who had engaged with similar content",
-      "Straight to the Explore page",
-      "Your followers, then non-followers"
+      "A summary of your best content",
+      "A backup for the profile picture",
+      "Your landing page",
+      "A place to list what you post about"
+    ], answer: 2 },
+
+  { q: "A page has a clean logo and strong content, but visitors leave without following. Where's the likeliest problem?",
+    options: [
+      "The posting schedule is inconsistent",
+      "The follower count is too low to seem credible",
+      "The bio isn't converting them",
+      "The niche is too competitive"
+    ], answer: 2 },
+
+  { q: "How long should a bio be?",
+    options: [
+      "3–4 lines",
+      "One line",
+      "As long as it takes to explain the page",
+      "6–8 lines"
+    ], answer: 0 },
+
+  { q: "Is bio setup the same across every niche?",
+    options: [
+      "Yes, as long as you keep it under four lines",
+      "Yes — the same three-line structure works everywhere",
+      "No — it depends on your follower count, not your niche",
+      "No — look at successful pages in your niche for inspiration"
     ], answer: 3 },
 
-  { q: "What changed how the algorithm distributes content?",
+  { q: "What three things should a bio answer?",
     options: [
-      "Platforms wanting more ad revenue",
-      "The rise of AI and bots on the platform",
-      "Creators posting more often",
-      "Shorter videos becoming more popular"
-    ], answer: 1 },
-
-  { q: "Who does a new post go to first now?",
-    options: [
-      "A mix of followers and non-followers",
-      "Around 200 non-followers",
-      "Your followers",
-      "People who engaged with your last post"
-    ], answer: 1 },
-
-  { q: "Your post reaches its first group and almost nobody engages. What happens?",
-    options: [
-      "It gets shown to a bigger group",
-      "It gets tried again at a better time",
-      "It stops there and doesn't get pushed further",
-      "It gets shown to your followers instead"
-    ], answer: 2 },
-
-  { q: "Who should you create every post for?",
-    options: [
-      "Your most loyal followers",
-      "Other creators in your niche",
-      "People most likely to comment",
-      "Someone who has never seen your content before"
-    ], answer: 3 },
-
-  { q: "\"Gambling can never work here.\" What does this mean?",
-    options: [
-      "Don't just post and hope. Give every post a clear purpose",
-      "Don't try formats you haven't tested",
-      "Don't rely on one post to grow your page",
-      "Don't chase trends that may not last"
+      "What the page is about, what you get from following, what to do next",
+      "What you post, how often you post, where else to find you",
+      "Who runs it, how long it's been going, what it posts",
+      "What you sell, what it costs, how to buy it"
     ], answer: 0 },
 
-  { q: "Why do people follow a page?",
+  { q: "\"Helping young men escape average.\" Which job is that line doing?",
     options: [
-      "Because they already search for that niche",
-      "They get value from the page and decide to follow",
-      "Because the page follows them back",
-      "Because the page posts consistently"
+      "Saying what the page is about and who it's for",
+      "Prompting the viewer to take an action",
+      "Telling the viewer what they'll gain by following",
+      "Establishing credibility"
+    ], answer: 0 },
+
+  { q: "\"Build discipline, wealth and confidence.\" Which job is that line doing?",
+    options: [
+      "Saying what the page is about",
+      "Naming the product being sold",
+      "Prompting the viewer to take an action",
+      "Telling the viewer what they'll get from following"
+    ], answer: 3 },
+
+  { q: "What goes in the last line of the bio?",
+    options: [
+      "A line about who runs the page",
+      "A call to action — what you want them to do",
+      "A list of hashtags for the niche",
+      "Your posting schedule"
+    ], answer: 1 },
+
+  { q: "You're just starting out and have nothing to sell yet. What belongs in your CTA?",
+    options: [
+      "A link to an affiliate offer in your niche",
+      "A simple follow prompt — build value and skill before adding a link",
+      "Nothing — leave the third line blank",
+      "A link to your other social accounts"
+    ], answer: 1 },
+
+  { q: "Why does the article say people are scrolling in the first place?",
+    options: [
+      "They're keeping up with people they know",
+      "They're bored, and a page offers them something to be part of",
+      "They're researching products to buy",
+      "They're looking for specific information"
     ], answer: 1 }
 ];
 
@@ -327,16 +335,16 @@ const QUESTIONS = [
 
 const BANDS = [
   { minPct: 100, label: "Full marks",
-    text: "You have the whole picture: the first three seconds, the call to action, and who the algorithm actually shows a post to first. Use the content to sharpen the execution, because knowing this and doing it on every post are different things." },
+    text: "You have the whole thing: what the picture is for, what the three lines of a bio each do, and why a call to action belongs on the last one. Use the content to sharpen your own profile against it." },
 
   { minPct: 80, label: "Strong footing",
-    text: "You understand how reach is won and only missed a few. Go through the content, then come back and run this again. Full marks is well within reach." },
+    text: "You understand what a profile has to do in the few seconds it gets and only missed a few. Go through the content, then come back and run this again. Full marks is well within reach." },
 
   { minPct: 60, label: "Solid start",
-    text: "The hook and the call to action are landing, but how distribution actually works is still fuzzy. Work through the content properly, then take the quiz again and see how far you move." },
+    text: "The picture side is landing, but what each line of the bio is actually for is still loose. Work through the content properly, then take the quiz again and see how far you move." },
 
   { minPct: 40, label: "Plenty to gain",
-    text: "You know some of it and there is real upside here. Go through the content in order, because posting without knowing who sees it first is the expensive way to learn this. Then take another run at this." },
+    text: "You know some of it and there is real upside here. Go through the content in order, because a profile people bounce off wastes every view the content earns. Then take another run at this." },
 
   { minPct: 0, label: "Fresh start",
     text: "Most of this is new to you, which is exactly what this check is for. Start at the beginning and take your time, then come back to the quiz once you have been through it." }
@@ -347,8 +355,8 @@ const BANDS = [
    ================================================================== */
 
 const TOTAL = QUESTIONS.length;
-const LS_HISTORY = "dq.growth.history.v1";
-const LS_PENDING = "dq.growth.pending.v1";
+const LS_HISTORY = "dq.bio.history.v1";
+const LS_PENDING = "dq.bio.pending.v1";
 const KEYS = ["A", "B", "C", "D", "E", "F"];
 
 const $ = id => document.getElementById(id);

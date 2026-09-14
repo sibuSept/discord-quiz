@@ -1,30 +1,38 @@
 # Context handoff: building the next quiz
 
-Paste this into a new chat to build quiz 3 without re-deriving any of the
-decisions from the first two.
+Paste this into a new chat to build the next quiz without re-deriving any of
+the decisions from the five that exist.
 
 ---
 
 ## What already exists and works
 
-Two multiple-choice knowledge checks for a Discord community of about 100
+Five multiple-choice knowledge checks for a Discord community of about 100
 people, taken **before** they consume the content, so each reads as a
 starting point rather than an exam.
 
 - **Repo:** `sibuSept/discord-quiz`
-- **Branch with both quizzes:** `claude/nifty-brown-f6q3zv`
-- **Quiz 1:** running and monetising social media theme pages, 15 questions.
-  Live on Netlify and recording.
-- **Quiz 2:** choosing a niche, 15 questions. Built and verified, may or may
-  not be on Netlify yet.
-- **Storage:** Google Sheet via a Google Apps Script web app.
-- `main` has neither. Both live on feature branches and no pull request has
-  been opened.
+- **Branch with all five:** `claude/exciting-franklin-epxhwl`
+- **Quiz 1:** running and monetising theme pages, 15 questions. Live on
+  Netlify and recording.
+- **Quiz 2:** choosing a niche, 15 questions. Built and verified, not yet
+  hosted.
+- **Quiz 3:** usernames and page names, 12 questions. Built and verified.
+- **Quiz 4:** growth tactics, 15 questions. Built and verified.
+- **Quiz 5:** profile picture and bio, 15 questions. Built and verified.
+- **Storage:** Google Sheets via Google Apps Script web apps.
+- `main` has none of it. Everything is on feature branches and no pull
+  request has been opened.
 
 ```
 index.html              quiz 1, the older intro style
-niche-quiz/index.html   quiz 2, copy THIS one for quiz 3
-apps-script/Code.gs     the Apps Script that writes submissions to the Sheet
+niche-quiz/index.html   quiz 2
+quiz-3/index.html       quiz 3, COPY THIS ONE (or quiz 4 or 5, same shape)
+quiz-4/index.html       quiz 4
+quiz-5/index.html       quiz 5
+apps-script/Code.gs     the Apps Script that writes submissions to a Sheet
+apps-script/test/       runs Code.gs against a fake spreadsheet, in Node
+tools/shuffle-options.py  evens out where the correct answer sits
 SETUP.md                step by step: the Sheet endpoint, then hosting
 README.md               how it works and how to edit questions
 NEW-QUIZ-BRIEF.md       this file
@@ -124,47 +132,46 @@ the look is mostly swapping hex values there.
 
 ---
 
-## To build quiz three
+## To build the next quiz
 
-1. **Copy `niche-quiz/index.html`**, not the root `index.html`. It is the
-   newer of the two: trimmed intro, `quizId`, namespaced storage keys. Do
-   not rewrite from scratch. The validation, keyboard handling, retry queue
-   and band logic are already correct and tested.
+1. **Copy `quiz-5/index.html`**, or quiz 3 or 4, never the root
+   `index.html`. They are the current shape: trimmed intro, `quizId`,
+   namespaced storage keys, shared endpoint. Do not rewrite from scratch.
+   The validation, keyboard handling, retry queue and band logic are already
+   correct and tested.
 2. **Put it in its own folder**, e.g. `quiz-3/index.html`, so the folder can
    be dragged onto Netlify and served at the root.
 3. **Replace** `CONFIG.title`, `CONFIG.note` if the wording should change,
    `CONFIG.quizId`, the `QUESTIONS` array and the `BANDS` feedback text.
 4. **Change the two `localStorage` keys** near the top of the machinery
    section to match the new `quizId`.
-5. **Decide the storage question** (below).
+5. **Even out the answer positions**: `python3 tools/shuffle-options.py
+   quiz-N/index.html`, then re-check the key. See below, this has mattered
+   on every quiz so far.
 6. **Deploy** as a separate Netlify site so each quiz has its own URL.
 
-### The storage decision
+### The storage decision, already made
 
-**The easy path, and the recommended one: reuse the existing endpoint.**
-Point `CONFIG.endpoint` at the deployment that runs the current `Code.gs`,
-the one with the Quiz column:
+**Quizzes 3, 4 and 5 share one deployment, and each writes to its own tab.**
+The tab is named after the `quizId` and is created on the first submission
+for that quiz, so a new quiz needs **no Apps Script work at all**: give it a
+`quizId` nobody else uses, point `CONFIG.endpoint` at the same URL the others
+use, and its tab appears when the first person finishes it.
 
-```
-https://script.google.com/macros/s/AKfycbzVKuO377whES3fwbvGsxxHS1X_ctW-bWx64ueuQYt-ptq_rimH1NrHh6ynTLxJxnS7/exec
-```
+Copy the endpoint from `quiz-5/index.html`. Do not invent one.
 
-Give quiz 3 a new `quizId` and it lands in the same sheet, labelled, with
-**no Apps Script setup at all**. `Code.gs` already handles any number of
-quizzes. This is the whole reason the Quiz column exists.
+Quiz names are not trusted with tab creation, since the `/exec` URL is public:
+only plain lowercase names of 24 characters or less become tabs, at most
+twelve of them, and anything else is recorded in a tab called `Unknown`. So
+keep `quizId` lowercase, short and hyphenated.
 
-**Confirm which spreadsheet that deployment is bound to before relying on
-it.** It was never established in the session that built quiz 2. In the
-Apps Script editor, **Overview** in the sidebar names the bound file, and
-**Extensions > Apps Script** opened from a sheet always belongs to that
-sheet.
+Quizzes 1 and 2 still point at an **older, separate** deployment whose bound
+spreadsheet was never confirmed. Leave quiz 1 alone: it is live and has real
+rows. Quiz 2 has never been hosted, so it can be repointed at the shared
+endpoint for free whenever someone decides to.
 
-**The alternative, a new Sheet per quiz**, is zero risk to the working setup
-but means repeating the full Apps Script walkthrough, about fifteen minutes
-of clicking. `SETUP.md` has it either way, including the setting people get
-wrong: **Who has access must be "Anyone"**, not "Anyone with Google
-account", because quiz takers are not signed in. Getting that wrong fails
-silently with no error and no row.
+`SETUP.md` has the full Apps Script walkthrough if a quiz ever genuinely
+needs a spreadsheet of its own.
 
 ### Apps Script traps worth knowing
 
@@ -207,7 +214,16 @@ rule rules out a linked image file.
 - **Bands are percentage based**, so the question count can change freely.
 - **The intro stays minimal.** One line, not three paragraphs.
 - **No em dashes anywhere** in copy, comments or docs. Use full stops,
-  colons, or a rewritten clause.
+  colons, or a rewritten clause. **One exception, agreed with the author:**
+  `quiz-5/index.html`, where the dashes pair a verdict with its reason in
+  the options. That file says so at the top of its `QUESTIONS` array. Do not
+  strip them there and do not treat it as a precedent.
+- **Spread the correct answers across all four positions.** Every quiz has
+  arrived with them bunched into one or two: quiz 4 came in as ten Bs and
+  five Cs with no As and no Ds, so picking B every time scored 10/15 without
+  reading a question. Run `tools/shuffle-options.py`, which reorders options
+  only, never the wording and never which option is correct, seeded from the
+  quizId so the diff is reviewable. Then assert the key again.
 - **British spelling** in user facing copy (monetising, not monetizing).
 
 ## Explicitly out of scope
@@ -237,8 +253,11 @@ None of this needs network access, and all of it caught something real:
   anything to the live endpoint.
 - **Diff the machinery** against the file you copied, to prove only CONFIG,
   QUESTIONS, BANDS and the storage keys changed.
-- **Run `Code.gs` in Node against a mock spreadsheet** if you change it at
-  all. It writes to live data.
+- **Run the Code.gs tests** if you change it at all, since it writes to live
+  data: `node apps-script/test/test-codegs.js`. Forty checks, no network and
+  no Google account needed.
+- **Check the answer spread** before and after shuffling:
+  `python3 tools/shuffle-options.py --check quiz-N/index.html`.
 
 ---
 

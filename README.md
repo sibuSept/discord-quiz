@@ -6,7 +6,7 @@ an exam. Scores are plain arithmetic, computed in the browser.
 
 No backend, no AI, no API keys, no running costs.
 
-Four quizzes live here. They share the same code, and differ only in their
+Five quizzes live here. They share the same code, and differ only in their
 `CONFIG`, `QUESTIONS` and `BANDS` blocks:
 
 ```
@@ -14,8 +14,10 @@ index.html              quiz 1: running and monetising theme pages, 15 questions
 niche-quiz/index.html   quiz 2: choosing a niche, 15 questions
 quiz-3/index.html       quiz 3: usernames and page names, 12 questions
 quiz-4/index.html       quiz 4: growth tactics, 15 questions
+quiz-5/index.html       quiz 5: profile picture and bio, 15 questions
 apps-script/Code.gs     Google Apps Script that writes submissions to a Sheet
 apps-script/test/       runs Code.gs against a fake spreadsheet, in plain Node
+tools/shuffle-options.py  evens out where the correct answer sits
 SETUP.md                step-by-step: the Sheet endpoint, then hosting
 NEW-QUIZ-BRIEF.md       context handoff for building further quizzes
 ```
@@ -39,7 +41,7 @@ does not depend on that answer. Its `CONFIG.endpoint` is blank until that
 deployment exists. See SETUP.md, "Giving a quiz its own sheet".
 
 **Each quiz writes to its own tab**, named after its `quizId`:
-`theme-pages`, `niche`, `names`, `growth`. The script creates the tab, heads it and
+`theme-pages`, `niche`, `names`, `growth`, `bio`. The script creates the tab, heads it and
 formats it the first time a score arrives for that quiz, so adding a quiz
 means giving it a new `quizId` and pointing it at the same web app URL.
 Nothing to edit in the script, nothing to redeploy.
@@ -67,7 +69,7 @@ node apps-script/test/test-codegs.js
 Because each is served from a different origin, their `localStorage` never
 collides. The keys are distinct regardless, so they would stay separate even
 if all three were ever served from one domain: `dq.history.v1` for quiz 1,
-then `dq.niche.*`, `dq.names.*` and `dq.growth.*`. Quiz 1's keys predate the per-quiz
+then `dq.niche.*`, `dq.names.*`, `dq.growth.*` and `dq.bio.*`. Quiz 1's keys predate the per-quiz
 namespacing and were left alone rather than renamed, since renaming them
 would orphan the attempt history of everyone who has already taken it.
 
@@ -78,13 +80,36 @@ would orphan the attempt history of everyone who has already taken it.
 2. Follow **SETUP.md** to create the Google Sheet endpoint and paste its
    URL into `CONFIG.endpoint`.
 3. Drop the file onto Cloudflare Pages or Netlify. For quizzes 2 onward,
-   drag the whole `niche-quiz`, `quiz-3` or `quiz-4` folder, which serves
-   its `index.html` at the root.
+   drag the whole `niche-quiz`, `quiz-3`, `quiz-4` or `quiz-5` folder,
+   which serves its `index.html` at the root.
 4. Paste the link in Discord.
 
 Open any `index.html` directly in a browser to preview at any point. With
 `CONFIG.endpoint` left blank it runs fully, scoring locally and sending
 nothing, which is exactly the state quiz 3 is in right now.
+
+## Two conventions worth knowing before you edit a quiz
+
+**Correct answers are spread evenly across the four positions.** Every quiz
+has arrived with them bunched: quiz 4 came in as ten Bs and five Cs with no
+As and no Ds, so picking B every time scored 10/15 without reading a
+question. `tools/shuffle-options.py` fixes that. It reorders options only,
+never the wording and never which option is correct, and it is seeded from
+the quizId so the result is reproducible and the diff reviewable.
+
+```
+python3 tools/shuffle-options.py --check quiz-5/index.html   # report the spread
+python3 tools/shuffle-options.py quiz-5/index.html           # even it out
+```
+
+Run it on any new quiz, then re-check the answer key against what the author
+ticked.
+
+**No em dashes, with one exception.** Copy, comments and docs use full stops,
+colons or a rewritten clause. `quiz-5/index.html` is the single agreed
+exception, where the dashes pair a verdict with its reason in the options.
+That file says so at the top of its `QUESTIONS` array. It is not a precedent
+for anywhere else.
 
 ## How it works
 
