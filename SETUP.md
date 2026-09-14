@@ -167,7 +167,9 @@ Useful formulas, dropped into an empty cell on another tab:
 Both were decided up front and are fine at this scale — noted here so they
 don't surprise you later.
 
-- **The answer key is in the page source.** Anyone who opens dev tools can
-  read it. Hiding it needs a backend, which this deliberately doesn't have.
+- **The answer key is in the page source.** The results screen doesn't show
+  the answers, but anyone who opens dev tools can read them out of the
+  `QUESTIONS` array. Hiding it properly needs a backend, which this
+  deliberately doesn't have.
 - **Handles are typed by hand.** Typos split one person across two rows, and
   nothing stops someone entering a fresh name for a clean first attempt.

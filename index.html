@@ -9,7 +9,7 @@
     --bg:#f4f5f9; --card:#ffffff; --ink:#1b1d25; --muted:#61667a;
     --line:#e2e4ed; --line-strong:#cdd1e0;
     --accent:#5865f2; --accent-ink:#ffffff; --accent-soft:#eceefe;
-    --good:#1f9254; --good-soft:#e6f5ed; --bad:#c62f3d; --bad-soft:#fdeaec;
+    --bad:#c62f3d;
     --radius:14px; --shadow:0 1px 2px rgba(20,22,40,.06), 0 8px 24px rgba(20,22,40,.06);
   }
   @media (prefers-color-scheme: dark){
@@ -17,7 +17,7 @@
       --bg:#11131a; --card:#191c25; --ink:#e9eaf0; --muted:#9aa0b5;
       --line:#272b37; --line-strong:#39405280;
       --accent:#7c86f7; --accent-ink:#0f1117; --accent-soft:#23283f;
-      --good:#4bd18a; --good-soft:#16301f; --bad:#ff7a86; --bad-soft:#33191d;
+      --bad:#ff7a86;
       --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
     }
   }
@@ -92,17 +92,6 @@
   .band{font-size:17px; font-weight:600; margin:10px 0 4px}
   .pill{display:inline-block; padding:4px 10px; border-radius:99px; font-size:13px; font-weight:600; background:var(--accent-soft); color:var(--accent)}
   hr{border:0; border-top:1px solid var(--line); margin:24px 0}
-  details{border:1px solid var(--line); border-radius:12px; padding:0 16px; background:var(--bg)}
-  details[open]{padding-bottom:8px}
-  summary{cursor:pointer; padding:14px 0; font-weight:600; font-size:15px; list-style:none}
-  summary::-webkit-details-marker{display:none}
-  summary::after{content:"›"; float:right; transform:rotate(90deg); color:var(--muted)}
-  details[open] summary::after{transform:rotate(-90deg)}
-  .review{border-top:1px solid var(--line); padding:14px 0; font-size:14.5px}
-  .review b{display:block; font-weight:600; margin-bottom:6px}
-  .tag{display:inline-block; padding:2px 8px; border-radius:6px; font-size:12.5px; font-weight:600; margin-right:6px}
-  .tag.ok{background:var(--good-soft); color:var(--good)}
-  .tag.no{background:var(--bad-soft); color:var(--bad)}
   .hist{font-size:14px; color:var(--muted); margin:0; padding-left:18px}
   .hist li{margin:3px 0}
   .status{font-size:13px; color:var(--muted); margin-top:18px}
@@ -118,6 +107,7 @@
   <h1 id="intro-title">Theme Page Knowledge Check</h1>
   <p class="muted" id="intro-blurb"></p>
   <p class="muted" id="intro-meta"></p>
+  <p class="muted" id="intro-note"></p>
 
   <label for="handle">Your Discord handle</label>
   <input type="text" id="handle" placeholder="e.g. yourname or yourname#1234"
@@ -159,22 +149,16 @@
   <p class="band" id="r-band"></p>
   <p class="muted" id="r-feedback"></p>
 
+  <p class="muted" id="r-retry-note">Answers aren't shown — that's deliberate.</p>
+
   <div id="r-history-wrap" class="hidden">
     <hr>
     <p class="muted" style="font-weight:600; color:var(--ink); margin-bottom:8px">Your attempts on this device</p>
     <ul class="hist" id="r-history"></ul>
   </div>
 
-  <div id="r-review-wrap" class="hidden">
-    <hr>
-    <details id="r-review-details">
-      <summary>Review your answers</summary>
-      <div id="r-review"></div>
-    </details>
-  </div>
-
   <div class="row">
-    <button class="btn ghost" id="retake">Take it again</button>
+    <button class="btn" id="retake">Take it again</button>
   </div>
   <p class="status" id="r-status"></p>
 </main>
@@ -193,10 +177,8 @@ const CONFIG = {
   endpoint: "",
 
   title:  "Theme Page Knowledge Check",
+  note:   "You get your score at the end, but not the answers. If you want full marks, go through the content and take it again.",
   blurb:  "A quick check of what you already know about running and monetising theme pages, before you go through the content. There's no pass mark — this is a starting point, not a test.",
-
-  /* Show a per-question review on the results screen. */
-  showReview: true,
 
   /* Save attempts to this browser so returning users see their history.
      Device-local only. The Google Sheet is the real record. */
@@ -333,19 +315,19 @@ const QUESTIONS = [
 
 const BANDS = [
   { minPct: 100, label: "Full marks",
-    text: "You've got the whole picture already — niches, shoutouts, affiliates, digital products, the lot. Use the content to sharpen the details and to pressure-test what you think you know." },
+    text: "You already have the whole picture — niches, shoutouts, affiliates, digital products, the lot. Use the content to sharpen the details and to pressure-test what you think you know." },
 
   { minPct: 80, label: "Strong footing",
-    text: "You understand how theme pages make money and only missed a few specifics. Look at the ones you got wrong — those are the gaps worth closing first." },
+    text: "You understand how theme pages make money and only missed a few. Go through the content, then come back and run this again — full marks is well within reach." },
 
   { minPct: 60, label: "Solid start",
-    text: "You've got the basics down but a decent chunk of this is new ground. Work through the content properly rather than skimming the parts you think you already know." },
+    text: "You have the basics down, but a decent chunk of this is new ground. Work through the content properly, then take the quiz again and see how far you move." },
 
   { minPct: 40, label: "Plenty to gain",
-    text: "You know some of the landscape and there's real upside here. Go through the content in order — the monetisation methods build on the fundamentals." },
+    text: "You know some of the landscape and there is real upside here. Go through the content in order — the monetisation methods build on the fundamentals — then take another run at this." },
 
   { minPct: 0, label: "Fresh start",
-    text: "Most of this is new to you, which is exactly what this check is for. Start at the beginning and take your time — everything here is learnable." }
+    text: "Most of this is new to you, which is exactly what this check is for. Start at the beginning and take your time, then come back to the quiz once you have been through it." }
 ];
 
 /* ==================================================================
@@ -424,6 +406,7 @@ function initIntro() {
   $("intro-meta").textContent =
     TOTAL + " multiple-choice questions, four options each. Takes about " +
     Math.max(2, Math.round(TOTAL * 0.4)) + " minutes. You get your score straight away.";
+  $("intro-note").textContent = CONFIG.note;
 
   $("handle").addEventListener("keydown", e => { if (e.key === "Enter") startQuiz(); });
   $("handle").addEventListener("input", () => { $("handle-err").textContent = ""; });
@@ -612,35 +595,6 @@ function renderResults(score, mine) {
     $("r-history-wrap").classList.add("hidden");
   }
 
-  /* Per-question review. */
-  if (CONFIG.showReview) {
-    const box = $("r-review");
-    box.textContent = "";
-    QUESTIONS.forEach((item, i) => {
-      const given = state.answers[i];
-      const right = given === item.answer;
-
-      const div = document.createElement("div");
-      div.className = "review";
-
-      const b = document.createElement("b");
-      b.textContent = (i + 1) + ". " + item.q;
-
-      const tag = document.createElement("span");
-      tag.className = "tag " + (right ? "ok" : "no");
-      tag.textContent = right ? "Correct" : "Missed";
-
-      const line = document.createElement("span");
-      line.textContent = right
-        ? item.options[item.answer]
-        : "You chose: " + item.options[given] + " · Correct: " + item.options[item.answer];
-
-      div.append(b, tag, line);
-      box.appendChild(div);
-    });
-    $("r-review-details").open = false;
-    $("r-review-wrap").classList.remove("hidden");
-  }
 }
 
 function retake() {

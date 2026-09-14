@@ -32,6 +32,10 @@ nothing.
   without choosing shows an inline error.
 - Score is `answers.filter(correct).length`. A band lookup turns it into a
   line of feedback.
+- **The results screen never reveals the answers** — score, band and history
+  only. Someone who wants full marks goes back through the content and takes
+  the quiz again. This is stated on the intro screen too, so nobody finishes
+  expecting an answer key.
 - On finish the browser POSTs `{ handle, score, total, timestamp }` to the
   Apps Script endpoint. One row per attempt, so filtering the sheet by
   handle gives that person's history.
