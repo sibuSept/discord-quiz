@@ -1,28 +1,42 @@
-# Discord community quiz
+# Discord community quizzes
 
-A single-page, 15-question multiple-choice knowledge check for a Discord
-group, on the subject of running and monetising social media theme pages.
-Taken *before* the content, so it reads as a starting point rather than an
-exam. Scores are plain arithmetic, computed in the browser.
+Single-page multiple-choice knowledge checks for a Discord group. Each one
+is taken *before* the content, so it reads as a starting point rather than
+an exam. Scores are plain arithmetic, computed in the browser.
 
 No backend, no AI, no API keys, no running costs.
 
+Two quizzes live here. They share the same code, and differ only in their
+`CONFIG`, `QUESTIONS` and `BANDS` blocks:
+
 ```
-index.html            the entire quiz: HTML, CSS and JS in one file
-apps-script/Code.gs   Google Apps Script that writes submissions to a Sheet
-SETUP.md              step-by-step: the Sheet endpoint, then hosting
+index.html              quiz 1: running and monetising theme pages, 15 questions
+niche-quiz/index.html   quiz 2: choosing a niche, 15 questions
+apps-script/Code.gs     Google Apps Script that writes submissions to a Sheet
+SETUP.md                step-by-step: the Sheet endpoint, then hosting
+NEW-QUIZ-BRIEF.md       context handoff for building further quizzes
 ```
+
+Each quiz is deployed as its own site, so each has its own URL. Quiz 2
+writes to its own Sheet and its own Apps Script deployment, so the two sets
+of results stay separate. `Code.gs` is used unchanged for both: a fresh
+deployment against a fresh Sheet needs no code edit.
+
+Because the two are served from different origins, their `localStorage`
+never collides. The storage keys are namespaced per quiz as well, so they
+stay separate even if both are ever served from one domain.
 
 ## Quick start
 
 1. Edit the `CONFIG` and `QUESTIONS` blocks at the top of the `<script>`
-   section in `index.html`.
+   section of the quiz you are changing.
 2. Follow **SETUP.md** to create the Google Sheet endpoint and paste its
    URL into `CONFIG.endpoint`.
-3. Drop `index.html` onto Cloudflare Pages or Netlify.
+3. Drop the file onto Cloudflare Pages or Netlify. For quiz 2, drag the
+   whole `niche-quiz` folder, which serves its `index.html` at the root.
 4. Paste the link in Discord.
 
-Open `index.html` directly in a browser to preview at any point. With
+Open either `index.html` directly in a browser to preview at any point. With
 `CONFIG.endpoint` left blank it runs fully, scoring locally and sending
 nothing.
 
