@@ -8,7 +8,7 @@ exam. Scores are plain arithmetic, computed in the browser.
 No backend, no AI, no API keys, no running costs.
 
 ```
-index.html            the entire quiz — HTML, CSS and JS in one file
+index.html            the entire quiz: HTML, CSS and JS in one file
 apps-script/Code.gs   Google Apps Script that writes submissions to a Sheet
 SETUP.md              step-by-step: the Sheet endpoint, then hosting
 ```
@@ -22,7 +22,7 @@ SETUP.md              step-by-step: the Sheet endpoint, then hosting
 3. Drop `index.html` onto Cloudflare Pages or Netlify.
 4. Paste the link in Discord.
 
-Open `index.html` directly in a browser to preview at any point — with
+Open `index.html` directly in a browser to preview at any point. With
 `CONFIG.endpoint` left blank it runs fully, scoring locally and sending
 nothing.
 
@@ -32,7 +32,7 @@ nothing.
   without choosing shows an inline error.
 - Score is `answers.filter(correct).length`. A band lookup turns it into a
   line of feedback.
-- **The results screen never reveals the answers** — score, band and history
+- **The results screen never reveals the answers.** Score, band and history
   only. Someone who wants full marks goes back through the content and takes
   the quiz again. This is stated on the intro screen too, so nobody finishes
   expecting an answer key.
@@ -40,14 +40,14 @@ nothing.
   Apps Script endpoint. One row per attempt, so filtering the sheet by
   handle gives that person's history.
 - Attempts are also written to `localStorage`, which drives the
-  "attempt 3 — 8/10, up from 6" line on the results screen. Device-local,
+  "attempt 3, 8/10, up from 6" line on the results screen. Device-local,
   so it's a bonus on top of the sheet, never the record.
 - A submission that fails to send is queued locally and retried the next
   time that person opens the page.
 
 ## Editing questions
 
-`answer` is the 0-based index of the correct option — `0` is the first
+`answer` is the 0-based index of the correct option. `0` is the first
 option, `3` the fourth.
 
 ```js

@@ -1,17 +1,17 @@
 # Setup
 
 Two jobs: get the Google Sheet collecting scores, then put the page online.
-Do them in that order — the page needs the endpoint URL from step one.
+Do them in that order. The page needs the endpoint URL from step one.
 
 ---
 
-## Part 1 — The Google Sheet endpoint
+## Part 1: The Google Sheet endpoint
 
 You need a Google account. Nothing here costs money and no API key is involved.
 
 ### 1. Make the sheet
 
-1. Go to <https://sheets.new> — that creates a blank spreadsheet.
+1. Go to <https://sheets.new>, which creates a blank spreadsheet.
 2. Name it something you'll recognise, e.g. **Discord Quiz Responses**.
 3. Leave it completely empty. The script creates and formats its own tab
    the first time a score comes in.
@@ -26,7 +26,7 @@ You need a Google account. Nothing here costs money and no API key is involved.
 5. Hit the save icon (or Ctrl/Cmd + S).
 
 The script is attached to *this* sheet, which is why it needs no key or
-credentials — it already has permission to write to its own spreadsheet.
+credentials. It already has permission to write to its own spreadsheet.
 
 ### 3. Deploy it as a web app
 
@@ -49,8 +49,8 @@ This is the fiddly bit. Read the two settings carefully.
 The first deployment asks for permission:
 
 1. Click **Authorize access**, pick your Google account.
-2. You'll see **"Google hasn't verified this app"**. Expected — you wrote it
-   five minutes ago. Click **Advanced**, then **Go to *(your project name)* (unsafe)**.
+2. You'll see **"Google hasn't verified this app"**. Expected, since you wrote
+   it five minutes ago. Click **Advanced**, then **Go to *(your project name)* (unsafe)**.
 3. Click **Allow**.
 
 ### 5. Copy the URL
@@ -61,7 +61,7 @@ After deploying you get a **Web app URL** ending in `/exec`, like:
 https://script.google.com/macros/s/AKfycbx...long.../exec
 ```
 
-Copy it. Paste it into a browser address bar — you should see
+Copy it. Paste it into a browser address bar. You should see
 *"Quiz endpoint is live. Submissions are accepted via POST."* If you see that,
 it works.
 
@@ -80,19 +80,19 @@ const CONFIG = {
 
 ### If you ever change `Code.gs`
 
-Saving is not enough — you must redeploy. **Deploy → Manage deployments →**
+Saving is not enough. You must redeploy. **Deploy → Manage deployments →**
 pencil icon **→ Version: New version → Deploy**. This keeps the same URL.
 Creating a *new deployment* instead gives you a different URL and the page
 will keep posting to the old one.
 
 ---
 
-## Part 2 — Putting the page online
+## Part 2: Putting the page online
 
 Both options are free, need no credit card, and give you a URL to paste in
 Discord. Pick one.
 
-### Option A — Cloudflare Pages (drag and drop)
+### Option A: Cloudflare Pages (drag and drop)
 
 1. Sign up at <https://dash.cloudflare.com> (free account).
 2. Sidebar: **Workers & Pages → Create → Pages → Upload assets**.
@@ -102,7 +102,7 @@ Discord. Pick one.
 
 To update: same screen, **Create new deployment**, drop the new file in.
 
-### Option B — Netlify Drop (fastest)
+### Option B: Netlify Drop (fastest)
 
 1. Go to <https://app.netlify.com/drop>.
 2. Drag the folder containing `index.html` onto the page.
@@ -113,7 +113,7 @@ To update: same screen, **Create new deployment**, drop the new file in.
 ### Either way
 
 Only `index.html` needs to be uploaded. `SETUP.md` and `apps-script/` are
-for you, not for the server — though it does no harm if they go up too.
+for you, not for the server, though it does no harm if they go up too.
 
 ---
 
@@ -123,7 +123,7 @@ for you, not for the server — though it does no harm if they go up too.
 2. Enter a throwaway handle like `test-run`.
 3. Answer all fifteen, hit **See my score**.
 4. The results screen should say *"Result sent."*
-5. Check the sheet — a **Responses** tab now exists with your row in it.
+5. Check the sheet. A **Responses** tab now exists with your row in it.
 6. Delete that test row before sharing the link.
 
 If no row appears:
@@ -146,7 +146,7 @@ The **Responses** tab gets one row per attempt:
 | Received | Submitted | Handle | Score | Total | Percent |
 |---|---|---|---|---|---|
 
-Attempt history falls out of this for free — filter or sort by **Handle** and
+Attempt history falls out of this for free. Filter or sort by **Handle** and
 you see every attempt that person made, with timestamps. Three attempts is
 three rows.
 
@@ -164,8 +164,8 @@ Useful formulas, dropped into an empty cell on another tab:
 
 ## Two things to keep in mind
 
-Both were decided up front and are fine at this scale — noted here so they
-don't surprise you later.
+Both were decided up front and are fine at this scale. They are noted here so
+they don't surprise you later.
 
 - **The answer key is in the page source.** The results screen doesn't show
   the answers, but anyone who opens dev tools can read them out of the

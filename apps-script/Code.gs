@@ -14,7 +14,7 @@
 var SHEET_NAME = 'Responses';
 var HEADERS = ['Received', 'Submitted', 'Handle', 'Score', 'Total', 'Percent'];
 
-/** Browser hits the /exec URL directly — handy for checking it's live. */
+/** Browser hits the /exec URL directly. Handy for checking it's live. */
 function doGet() {
   return ContentService
     .createTextOutput('Quiz endpoint is live. Submissions are accepted via POST.')

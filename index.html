@@ -101,7 +101,7 @@
 <div class="wrap">
 
 <!-- ============================================================
-     SCREEN 1 — handle entry
+     SCREEN 1: handle entry
      ============================================================ -->
 <main class="card" id="screen-intro">
   <h1 id="intro-title">Theme Page Knowledge Check</h1>
@@ -120,7 +120,7 @@
 </main>
 
 <!-- ============================================================
-     SCREEN 2 — questions
+     SCREEN 2: questions
      ============================================================ -->
 <main class="card hidden" id="screen-quiz">
   <div class="meta">
@@ -141,7 +141,7 @@
 </main>
 
 <!-- ============================================================
-     SCREEN 3 — results
+     SCREEN 3: results
      ============================================================ -->
 <main class="card hidden" id="screen-results">
   <span class="pill" id="r-attempt"></span>
@@ -149,7 +149,7 @@
   <p class="band" id="r-band"></p>
   <p class="muted" id="r-feedback"></p>
 
-  <p class="muted" id="r-retry-note">Answers aren't shown — that's deliberate.</p>
+  <p class="muted" id="r-retry-note">Answers aren't shown. That's deliberate.</p>
 
   <div id="r-history-wrap" class="hidden">
     <hr>
@@ -167,18 +167,18 @@
 
 <script>
 /* ==================================================================
-   CONFIG — everything you edit lives in this block.
+   CONFIG: everything you edit lives in this block.
    ================================================================== */
 
 const CONFIG = {
   /* Paste your Google Apps Script web app URL here after deploying.
-     It must end in /exec — see SETUP.md. Leave blank to run the quiz
+     It must end in /exec. See SETUP.md. Leave blank to run the quiz
      with local-only scoring (nothing is sent anywhere). */
   endpoint: "",
 
   title:  "Theme Page Knowledge Check",
   note:   "You get your score at the end, but not the answers. If you want full marks, go through the content and take it again.",
-  blurb:  "A quick check of what you already know about running and monetising theme pages, before you go through the content. There's no pass mark — this is a starting point, not a test.",
+  blurb:  "A quick check of what you already know about running and monetising theme pages, before you go through the content. There's no pass mark. This is a starting point, not a test.",
 
   /* Save attempts to this browser so returning users see their history.
      Device-local only. The Google Sheet is the real record. */
@@ -186,7 +186,7 @@ const CONFIG = {
 };
 
 /* ------------------------------------------------------------------
-   QUESTIONS — `answer` is the 0-based index of the correct option,
+   QUESTIONS: `answer` is the 0-based index of the correct option,
    so 0 = first option, 3 = fourth.
    ------------------------------------------------------------------ */
 
@@ -255,7 +255,7 @@ const QUESTIONS = [
       "Grow as fast as possible and flip it early",
       "Keep it small so it's easier to manage",
       "Grow with a long-term vision and treat it like a business or brand",
-      "Avoid getting attached — never post original content"
+      "Avoid getting attached, and never post original content"
     ], answer: 2 },
 
   { q: "Why are digital products called the best way to earn?",
@@ -308,23 +308,23 @@ const QUESTIONS = [
 ];
 
 /* ------------------------------------------------------------------
-   BANDS — `minPct` is the lowest percentage that earns this band, so
+   BANDS: `minPct` is the lowest percentage that earns this band, so
    these stay correct if you add or remove questions. Checked top to
    bottom, so keep them in descending order.
    ------------------------------------------------------------------ */
 
 const BANDS = [
   { minPct: 100, label: "Full marks",
-    text: "You already have the whole picture — niches, shoutouts, affiliates, digital products, the lot. Use the content to sharpen the details and to pressure-test what you think you know." },
+    text: "You already have the whole picture: niches, shoutouts, affiliates, digital products, the lot. Use the content to sharpen the details and to pressure-test what you think you know." },
 
   { minPct: 80, label: "Strong footing",
-    text: "You understand how theme pages make money and only missed a few. Go through the content, then come back and run this again — full marks is well within reach." },
+    text: "You understand how theme pages make money and only missed a few. Go through the content, then come back and run this again. Full marks is well within reach." },
 
   { minPct: 60, label: "Solid start",
     text: "You have the basics down, but a decent chunk of this is new ground. Work through the content properly, then take the quiz again and see how far you move." },
 
   { minPct: 40, label: "Plenty to gain",
-    text: "You know some of the landscape and there is real upside here. Go through the content in order — the monetisation methods build on the fundamentals — then take another run at this." },
+    text: "You know some of the landscape and there is real upside here. Go through the content in order, because the monetisation methods build on the fundamentals. Then take another run at this." },
 
   { minPct: 0, label: "Fresh start",
     text: "Most of this is new to you, which is exactly what this check is for. Start at the beginning and take your time, then come back to the quiz once you have been through it." }
@@ -421,7 +421,7 @@ function startQuiz() {
     return;
   }
   if (handle.length < 2) {
-    $("handle-err").textContent = "That looks too short — use the handle people see in the server.";
+    $("handle-err").textContent = "That looks too short. Use the handle people see in the server.";
     $("handle").focus();
     return;
   }
@@ -526,7 +526,7 @@ function finish() {
     timestamp: new Date().toISOString()
   };
 
-  /* Local history first — it must not depend on the network. */
+  /* Local history first, because it must not depend on the network. */
   let mine = [];
   if (CONFIG.localHistory) {
     const all = lsRead(LS_HISTORY);
@@ -545,7 +545,7 @@ function finish() {
       .then(() => { $("r-status").textContent = "Result sent. You can close this page."; })
       .catch(() => {
         queuePending(payload);
-        $("r-status").textContent = "Couldn't reach the server — your result is saved on this device and will be sent next time you open this page.";
+        $("r-status").textContent = "Couldn't reach the server. Your result is saved on this device and will be sent next time you open this page.";
       });
   } else {
     $("r-status").textContent = "No storage endpoint is configured, so this result was saved on this device only.";
@@ -572,7 +572,7 @@ function renderResults(score, mine) {
     const move = delta > 0 ? "up from " + prev.score
                : delta < 0 ? "down from " + prev.score
                : "same as last time";
-    attemptPill.textContent = "Attempt " + mine.length + " — " + move;
+    attemptPill.textContent = "Attempt " + mine.length + ", " + move;
     attemptPill.classList.remove("hidden");
   } else {
     attemptPill.textContent = state.handle;
@@ -587,7 +587,7 @@ function renderResults(score, mine) {
       const when = new Date(a.timestamp);
       const stamp = isNaN(when) ? "" : when.toLocaleDateString(undefined, { day: "numeric", month: "short" }) +
                                        ", " + when.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
-      li.textContent = "Attempt " + (mine.length - n) + " — " + a.score + "/" + a.total + (stamp ? " · " + stamp : "");
+      li.textContent = "Attempt " + (mine.length - n) + ": " + a.score + "/" + a.total + (stamp ? " · " + stamp : "");
       ul.appendChild(li);
     });
     $("r-history-wrap").classList.remove("hidden");
