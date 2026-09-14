@@ -170,11 +170,11 @@
    ================================================================== */
 
 const CONFIG = {
-  /* This quiz's own Apps Script deployment, deployed 14 Sept 2026 as
-     version 2. The theme page quiz posts to a different deployment, so
-     check which sheet this one is bound to before assuming the two share
-     a spreadsheet. See SETUP.md. */
-  endpoint: "https://script.google.com/macros/s/AKfycbyNW64AXHegppCIq1j2q76VCkqrLA-hTvJz8BLlfmuXT8ReIekZCwz-5yh4abS7tH4S/exec",
+  /* The deployment carrying the updated Code.gs, the one with the Quiz
+     column. The theme page quiz still posts to an older deployment of
+     that same script, which runs the previous version of the code until
+     it is bumped. See SETUP.md. */
+  endpoint: "https://script.google.com/macros/s/AKfycbzVKuO377whES3fwbvGsxxHS1X_ctW-bWx64ueuQYt-ptq_rimH1NrHh6ynTLxJxnS7/exec",
 
   /* Goes in the Quiz column of the shared sheet. Keep it short and keep
      it stable: changing it splits this quiz's rows in two. */
