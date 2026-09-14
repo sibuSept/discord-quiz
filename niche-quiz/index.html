@@ -170,12 +170,14 @@
    ================================================================== */
 
 const CONFIG = {
-  /* Paste your Google Apps Script web app URL here after deploying.
-     It must end in /exec. See SETUP.md. This is a NEW Sheet and a NEW
-     deployment, separate from the theme page quiz. Left blank on
-     purpose: while it is blank the quiz scores locally and sends
-     nothing anywhere. */
-  endpoint: "",
+  /* Shared with the theme page quiz: same Sheet, same Apps Script
+     deployment. Rows are told apart by quizId below, which the script
+     writes to the Quiz column. See SETUP.md. */
+  endpoint: "https://script.google.com/macros/s/AKfycbx0t6LatuHBN0EH2YUjphksmYX2F77RYg2OSOhcXwfgqcC9ytYfajZd3iJ-IfLeqOH9LA/exec",
+
+  /* Goes in the Quiz column of the shared sheet. Keep it short and keep
+     it stable: changing it splits this quiz's rows in two. */
+  quizId: "niche",
 
   title:  "Niche Knowledge Check",
 
@@ -540,7 +542,8 @@ function finish() {
     handle: state.handle,
     score: score,
     total: TOTAL,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    quiz: CONFIG.quizId
   };
 
   /* Local history first, because it must not depend on the network. */

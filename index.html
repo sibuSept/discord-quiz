@@ -176,6 +176,11 @@ const CONFIG = {
      with local-only scoring (nothing is sent anywhere). */
   endpoint: "https://script.google.com/macros/s/AKfycbx0t6LatuHBN0EH2YUjphksmYX2F77RYg2OSOhcXwfgqcC9ytYfajZd3iJ-IfLeqOH9LA/exec",
 
+  /* Goes in the Quiz column of the shared sheet. The script already
+     defaults missing labels to this same value, so the live page keeps
+     working untouched. This just makes it explicit. */
+  quizId: "theme-pages",
+
   title:  "Theme Page Knowledge Check",
   note:   "You get your score at the end, but not the answers. If you want full marks, go through the content and take it again.",
   blurb:  "A quick check of what you already know about running and monetising theme pages, before you go through the content. There's no pass mark. This is a starting point, not a test.",
@@ -523,7 +528,8 @@ function finish() {
     handle: state.handle,
     score: score,
     total: TOTAL,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    quiz: CONFIG.quizId
   };
 
   /* Local history first, because it must not depend on the network. */

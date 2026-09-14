@@ -12,7 +12,13 @@
  */
 
 var SHEET_NAME = 'Responses';
-var HEADERS = ['Received', 'Submitted', 'Handle', 'Score', 'Total', 'Percent'];
+var HEADERS = ['Received', 'Submitted', 'Handle', 'Score', 'Total', 'Percent', 'Quiz'];
+
+/* More than one quiz posts here now, so every row is labelled. Quiz is the
+   last column on purpose: rows written before it existed stay lined up, and
+   their Quiz cell is backfilled below. A page that sends no quiz name is the
+   theme page quiz, which is the only one that predates this column. */
+var DEFAULT_QUIZ = 'theme-pages';
 
 /** Browser hits the /exec URL directly. Handy for checking it's live. */
 function doGet() {
@@ -48,13 +54,16 @@ function doPost(e) {
       return jsonOut_({ ok: false, error: 'bad score' });
     }
 
+    var quiz = String(data.quiz == null ? '' : data.quiz).trim().slice(0, 60) || DEFAULT_QUIZ;
+
     getSheet_().appendRow([
       new Date(),                       // when the server received it
       data.timestamp || '',             // when the browser submitted it
       handle,
       score,
       total,
-      Math.round((score / total) * 100) / 100   // formatted as % by the sheet
+      Math.round((score / total) * 100) / 100,  // formatted as % by the sheet
+      quiz
     ]);
 
     return jsonOut_({ ok: true });
@@ -80,6 +89,22 @@ function getSheet_() {
     sheet.setFrozenRows(1);
     sheet.getRange('A:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
     sheet.getRange('F:F').setNumberFormat('0%');
+    return sheet;
+  }
+
+  /* A sheet that already has rows predates the Quiz column. Add the header
+     and label the existing rows, once. Runs on the first submission after
+     this script is updated, then never does anything again. */
+  if (sheet.getLastColumn() < HEADERS.length) {
+    var col = HEADERS.length;
+    sheet.getRange(1, col).setValue(HEADERS[col - 1]).setFontWeight('bold');
+
+    var rows = sheet.getLastRow() - 1;
+    if (rows > 0) {
+      var fill = [];
+      for (var i = 0; i < rows; i++) fill.push([DEFAULT_QUIZ]);
+      sheet.getRange(2, col, rows, 1).setValues(fill);
+    }
   }
 
   return sheet;

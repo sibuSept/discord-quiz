@@ -85,6 +85,30 @@ pencil icon **→ Version: New version → Deploy**. This keeps the same URL.
 Creating a *new deployment* instead gives you a different URL and the page
 will keep posting to the old one.
 
+### Adding another quiz to the same sheet
+
+Both quizzes in this repo post to one endpoint and one sheet. They are told
+apart by the **Quiz** column, which the script fills from the `quizId` in
+each page's `CONFIG`.
+
+To add a quiz to a sheet that is already collecting results:
+
+1. Give the new page a `quizId` nobody else uses.
+2. Update `Code.gs` in the Apps Script editor from this repo, then redeploy
+   it as a new version, per the section above.
+3. Only then put the new page online.
+
+**Order matters.** A page that goes live before the script is redeployed
+still records, because the old script accepts the extra field and ignores
+it, but those rows land with no quiz label and nothing on them says which
+quiz they came from. Redeploy first.
+
+The first submission after the redeploy upgrades the sheet on its own: it
+adds the **Quiz** header and stamps every existing row `theme-pages`, since
+those rows all predate the column. It runs once and never touches those rows
+again. A page that sends no `quizId` at all is also recorded as
+`theme-pages`, so the theme page quiz keeps working without being redeployed.
+
 ---
 
 ## Part 2: Putting the page online
@@ -143,22 +167,29 @@ If no row appears:
 
 The **Responses** tab gets one row per attempt:
 
-| Received | Submitted | Handle | Score | Total | Percent |
-|---|---|---|---|---|---|
+| Received | Submitted | Handle | Score | Total | Percent | Quiz |
+|---|---|---|---|---|---|---|
 
 Attempt history falls out of this for free. Filter or sort by **Handle** and
 you see every attempt that person made, with timestamps. Three attempts is
 three rows.
 
+Both quizzes share this tab, so filter by **Quiz** before you read anything
+as a single quiz's results. `theme-pages` is the theme page quiz, `niche` is
+the niche one. Scores are not comparable across the two: they are different
+questions.
+
 Useful formulas, dropped into an empty cell on another tab:
 
 ```
-=UNIQUE(Responses!C2:C)                              ' everyone who has taken it
-=COUNTA(UNIQUE(Responses!C2:C))                      ' how many distinct handles
-=AVERAGE(Responses!D2:D)                             ' mean score
-=COUNTIF(Responses!C2:C, "somehandle")               ' attempts by one person
-=MAXIFS(Responses!D2:D, Responses!C2:C, "somehandle") ' their best score
+=UNIQUE(FILTER(Responses!C2:C, Responses!G2:G="niche"))   ' everyone who took this quiz
+=AVERAGEIF(Responses!G2:G, "niche", Responses!D2:D)       ' mean score on this quiz
+=COUNTIFS(Responses!C2:C, "somehandle", Responses!G2:G, "niche")   ' their attempts
+=MAXIFS(Responses!D2:D, Responses!C2:C, "somehandle", Responses!G2:G, "niche")
 ```
+
+Swap `"niche"` for `"theme-pages"` to read the other quiz. Leaving the quiz
+filter out averages the two together, which is a number that means nothing.
 
 ---
 

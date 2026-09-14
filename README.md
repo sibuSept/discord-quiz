@@ -17,10 +17,13 @@ SETUP.md                step-by-step: the Sheet endpoint, then hosting
 NEW-QUIZ-BRIEF.md       context handoff for building further quizzes
 ```
 
-Each quiz is deployed as its own site, so each has its own URL. Quiz 2
-writes to its own Sheet and its own Apps Script deployment, so the two sets
-of results stay separate. `Code.gs` is used unchanged for both: a fresh
-deployment against a fresh Sheet needs no code edit.
+Each quiz is deployed as its own site, so each has its own URL. Both post
+to the same Apps Script deployment and the same Sheet, and each row carries
+a **Quiz** column so the two can be told apart. The label comes from
+`CONFIG.quizId` in each page: `theme-pages` and `niche`.
+
+Changing `Code.gs` means redeploying it in the Apps Script editor before the
+page that depends on the change goes live. See SETUP.md.
 
 Because the two are served from different origins, their `localStorage`
 never collides. The storage keys are namespaced per quiz as well, so they
