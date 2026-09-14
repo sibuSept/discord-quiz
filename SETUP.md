@@ -87,9 +87,14 @@ will keep posting to the old one.
 
 ### Adding another quiz to the same sheet
 
-Both quizzes in this repo post to one endpoint and one sheet. They are told
-apart by the **Quiz** column, which the script fills from the `quizId` in
-each page's `CONFIG`.
+Each quiz in this repo posts to its own deployment. They can share a sheet
+or use one each, and either way they are told apart by the **Quiz** column,
+which the script fills from the `quizId` in each page's `CONFIG`.
+
+If two deployments belong to the same script project, they are independent:
+each keeps running the version it was deployed with. Updating the code and
+redeploying one leaves the other on the old version, which is how a sheet
+ends up with rows in two different shapes.
 
 To add a quiz to a sheet that is already collecting results:
 
@@ -174,8 +179,8 @@ Attempt history falls out of this for free. Filter or sort by **Handle** and
 you see every attempt that person made, with timestamps. Three attempts is
 three rows.
 
-Both quizzes share this tab, so filter by **Quiz** before you read anything
-as a single quiz's results. `theme-pages` is the theme page quiz, `niche` is
+If both quizzes write to this sheet, filter by **Quiz** before you read
+anything as a single quiz's results. `theme-pages` is the theme page quiz, `niche` is
 the niche one. Scores are not comparable across the two: they are different
 questions.
 

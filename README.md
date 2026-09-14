@@ -17,13 +17,21 @@ SETUP.md                step-by-step: the Sheet endpoint, then hosting
 NEW-QUIZ-BRIEF.md       context handoff for building further quizzes
 ```
 
-Each quiz is deployed as its own site, so each has its own URL. Both post
-to the same Apps Script deployment and the same Sheet, and each row carries
-a **Quiz** column so the two can be told apart. The label comes from
-`CONFIG.quizId` in each page: `theme-pages` and `niche`.
+Each quiz is deployed as its own site, so each has its own URL, and each
+posts to its own Apps Script deployment. Whether those two deployments write
+to the same spreadsheet depends on which file each script project is bound
+to, which is worth confirming rather than assuming: a script opened from a
+sheet via **Extensions > Apps Script** always belongs to that sheet.
+
+Either way every row carries a **Quiz** column, from `CONFIG.quizId` in each
+page: `theme-pages` and `niche`. In one shared sheet that column is what
+tells the two apart. In separate sheets it costs nothing and means the two
+can be merged later without guessing which rows came from where.
 
 Changing `Code.gs` means redeploying it in the Apps Script editor before the
-page that depends on the change goes live. See SETUP.md.
+page that depends on the change goes live, and a deployment runs whichever
+version was current when it was deployed. Two deployments of the same
+project can be running different code. See SETUP.md.
 
 Because the two are served from different origins, their `localStorage`
 never collides. The storage keys are namespaced per quiz as well, so they
